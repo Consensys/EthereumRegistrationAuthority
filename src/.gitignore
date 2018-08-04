@@ -1,0 +1,7 @@
+# Ignore build output
+build
+
+package-lock.json
+
+node_modules
+
