@@ -1,14 +1,14 @@
 /**
- * ERA.sol unitinialised tests.
+ * ERA_v1.sol unitinialised tests.
  *
  * The tests in this file check the behaviour of the ERA contract when no domains have
  * been added to it.
  */
-const ERA = artifacts.require("./ERA.sol");
+const ERA = artifacts.require("./ERA_v1.sol");
 
 // All tests of the public API must be tested via the interface. This ensures all functions
 // which are assumed to be part of the public API actually are in the interface.
-const AbstractERA = artifacts.require("./AbstractERA.sol");
+const AbstractERA = artifacts.require("./EthereumRegistrationAuthorityInterface.sol");
 
 contract('ERA: Empty Tests', function(accounts) {
     // Used when assigning a domain to a dummy address.

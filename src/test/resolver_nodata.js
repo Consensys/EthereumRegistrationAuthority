@@ -1,17 +1,17 @@
 /**
- * Resolver.sol tests with either no ERAs or no domains.
+ * Resolver_v1.sol tests with either no ERAs or no domains.
  *
  * The tests in this file check the behaviour of the Resolver contract when not enough
  * information is supplied: either there are no ERAs to search in, or there are no domains
  * to search for.
  */
-const Resolver = artifacts.require("./Resolver.sol");
-const ERA = artifacts.require("./ERA.sol");
+const Resolver = artifacts.require("./Resolver_v1.sol");
+const ERA = artifacts.require("./ERA_v1.sol");
 
 // All tests of the public API must be tested via the interface. This ensures all functions
 // which are assumed to be part of the public API actually are in the interface.
-const AbstractResolver = artifacts.require("./AbstractResolver.sol");
-const AbstractERA = artifacts.require("./AbstractERA.sol");
+const AbstractResolver = artifacts.require("./ResolverInterface.sol");
+const AbstractERA = artifacts.require("./EthereumRegistrationAuthorityInterface.sol");
 
 
 const SHA3 = require('sha3');

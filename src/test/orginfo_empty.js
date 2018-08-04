@@ -1,14 +1,14 @@
 /**
- * OrgInfo.sol unitinialised tests.
+ * OrgInfo_v1.sol unitinialised tests.
  *
  * The tests in this file check the behaviour of the OrgInfo contract when no key-values have
  * been added to it.
  */
-const OrgInfo = artifacts.require("./OrgInfo.sol");
+const OrgInfo = artifacts.require("./OrgInfo_v1.sol");
 
 // All tests of the public API must be tested via the interface. This ensures all functions
 // which are assumed to be part of the public API actually are in the interface.
-const AbstractOrgInfo = artifacts.require("./AbstractOrgInfo.sol");
+const AbstractOrgInfo = artifacts.require("./OrgInfoInterface.sol");
 
 contract('OrgInfo: Empty Tests', function(accounts) {
 

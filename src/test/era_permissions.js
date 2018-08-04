@@ -1,5 +1,5 @@
 /**
- * ERA.sol permission tests.
+ * ERA_v1.sol permission tests.
  *
  * The tests in this file check that functions can only be called by the
  * appropriate callers.
@@ -7,11 +7,11 @@
  * Note: transactions by default use account 0 in test rpc.
  */
 
-const ERA = artifacts.require("./ERA.sol");
+const ERA = artifacts.require("./ERA_v1.sol");
 
 // All tests of the public API must be tested via the interface. This ensures all functions
 // which are assumed to be part of the public API actually are in the interface.
-const AbstractERA = artifacts.require("./AbstractERA.sol");
+const AbstractERA = artifacts.require("./EthereumRegistrationAuthorityInterface.sol");
 
 contract('ERA: Permission Tests', function(accounts) {
     const zeroAddress = "0x0";

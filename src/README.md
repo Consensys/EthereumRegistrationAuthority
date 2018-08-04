@@ -19,6 +19,8 @@ changeAuthority 30431
 changeOrgInfo 30387
 changeOwner 30563
 
+TODO also install web3  hexy  sha3
+TODO work out what should be replaced.
 
 
 # Truffle Installation:
