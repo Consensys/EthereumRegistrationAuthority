@@ -18,27 +18,18 @@
  * There is a single ERA
  * The domain hash of the domain is in the ERA.
  */
-const Resolver = artifacts.require("./Resolver_v1.sol");
-const ERA = artifacts.require("./ERA_v1.sol");
+var Web3 = require('web3');
+var web3 = new Web3();
 
-// All tests of the public API must be tested via the interface. This ensures all functions
-// which are assumed to be part of the public API actually are in the interface.
-const AbstractResolver = artifacts.require("./ResolverInterface.sol");
-const AbstractERA = artifacts.require("./EthereumRegistrationAuthorityInterface.sol");
+contract('Resolver: Single Domain', function(accounts) {
+    let common = require('./common');
 
+    // For the purposes of this test, this can be a fake, non-zero address.
+    const testOrgInfoAddress1 = "0x0102030405060708090a1112131415161718191a";
 
-const SHA3 = require('sha3');
-const hexy = require("hexy");
+    let eraInterface;
+    let resolverInterface;
 
-
-contract('Resolver: Single', function(accounts) {
-    const zeroAddress = "0x0";
-
-    const testOrgInfoAddress1 = "0x0000000000000000000000000000000000000011";
-    const testDomain = "aa.bb.example.com.au";
-    const testDomainP1 = "bb.example.com.au";
-    const testDomainP2 = "example.com.au";
-    const testDomainP3 = "com.au";
 
     let testDomainHash;
     let testDomainHashP1;
@@ -46,84 +37,49 @@ contract('Resolver: Single', function(accounts) {
     let testDomainHashP3;
 
 
-    let eraAddress;
-    let resolverInterface;
-
-
-    async function calculateDomainHashes() {
-        let md = new SHA3.SHA3Hash(256); //TODO is this really SHA3 or is it KECCAK?
-        md.update(testDomain, 'utf-8');
-        testDomainHash = '0x' + md.digest('hex');
-//        console.log("testDomainHash: " + testDomain);
-//        console.log(testDomainHash);
-//        console.log(hexy.hexy(new Buffer(testDomainHashBin, 'binary')));
-
-        md = new SHA3.SHA3Hash(256); //TODO is this really SHA3 or is it KECCAK?
-        md.update(testDomainP1, 'utf-8');
-        testDomainHashP1 = '0x' + md.digest('hex');
-//        console.log("testDomainHashP1: " + testDomainP1);
-//        console.log(testDomainHashP1);
-
-        md = new SHA3.SHA3Hash(256); //TODO is this really SHA3 or is it KECCAK?
-        md.update(testDomainP2, 'utf-8');
-        testDomainHashP2 = '0x' + md.digest('hex');
-//        console.log("testDomainHashP2: " + testDomainP2);
-//        console.log(testDomainHashP2);
-
-        md = new SHA3.SHA3Hash(256); //TODO is this really SHA3 or is it KECCAK?
-        md.update(testDomainP3, 'utf-8');
-        testDomainHashP3 = '0x' + md.digest('hex');
-//        console.log("testDomainHashP3: " + testDomainP3);
-//        console.log(testDomainHashP3);
-    }
-
-    async function setupEras() {
-        const domainOwner = accounts[4];
-
-        //Note: transactions by default use account 0 in test rpc.
-        let eraInstance = await ERA.new();
-        eraAddress = eraInstance.address;
-        let eraInterface = await AbstractERA.at(eraAddress);
-
-        const resultAddDomain = await eraInterface.addDomain(testDomainHash, 0, testOrgInfoAddress1, domainOwner);
-    }
-
-    async function setupResolver() {
-        let resolverInstance = await Resolver.new();
-        let resolverAddress = resolverInstance.address;
-        resolverInterface = await AbstractResolver.at(resolverAddress);
-    }
-
-
     beforeEach(async function () {
-        if (this.testDomainHash == null) {
-            await calculateDomainHashes();
-            await setupEras();
-            await setupResolver();
+        // Only run this before the first test method is executed.
+        if (common.testDomainHash == null) {
+            eraInterface = await common.getNewERA();
+            resolverInterface = await common.getNewResolver();
+
+            testDomainHash = web3.utils.keccak256(common.TEST_DOMAIN);
+            testDomainHashP1 = web3.utils.keccak256(common.TEST_DOMAIN_P1);
+            testDomainHashP2 = web3.utils.keccak256(common.TEST_DOMAIN_P2);
+            testDomainHashP3 = web3.utils.keccak256(common.TEST_DOMAIN_P3);
+
+            const domainOwner = accounts[1];
+            await eraInterface.addDomainOrgInfoOnly(testDomainHash, testOrgInfoAddress1, domainOwner);
         }
     });
 
 
-    it("resolve", async function() {
-        let resolvedOrgInfo = await resolverInterface.resolve.call(eraAddress, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
+    it("resolve1", async function () {
+    });
+
+
+    it("resolve", async function () {
+        let resolvedOrgInfo = await resolverInterface.resolve.call(
+            eraInterface.address, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
         assert.equal(testOrgInfoAddress1, resolvedOrgInfo);
 //        console.log("resolvedOrgInfo: " + resolvedOrgInfo);
     });
 
 
-    it("resolveDomain", async function() {
+    it("resolveDomain", async function () {
         let eras = [];
-        eras[0] = eraAddress;
+        eras[0] = eraInterface.address;
 
-        let resolvedOrgInfo = await resolverInterface.resolveDomain.call(eras, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
+        let resolvedOrgInfo = await resolverInterface.resolve.call(
+            eras, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
         assert.equal(testOrgInfoAddress1, resolvedOrgInfo);
 //        console.log("resolvedOrgInfo: " + resolvedOrgInfo);
     });
 
 
-    it("resolveDomains", async function() {
+    it("resolveDomains", async function () {
         let eras = [];
-        eras[0] = eraAddress;
+        eras[0] = eraInterface.address;
         let domainHashes = [];
         domainHashes[0] = testDomainHash;
         let p1DomainHashes = [];
