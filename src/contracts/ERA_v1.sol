@@ -28,7 +28,6 @@ contract ERA_v1 is EthereumRegistrationAuthorityInterface, Ownable {
         address orgInfo;
         address owner;
     }
-
     mapping(uint256=>Record) private records;
 
     // Permits modifications only by the owner of the specified domain.
@@ -38,43 +37,31 @@ contract ERA_v1 is EthereumRegistrationAuthorityInterface, Ownable {
     }
 
 
-    // Note: onlyOwner called by addDomainInternal.
-    function addDomain(uint256 _domainHash, address _domainAuthority, address _orgInfo, address _domainOwner) external {
-        addDomainInternal(_domainHash, _domainAuthority, _orgInfo, _domainOwner);
-    }
-
-    // Note: onlyOwner called by addDomainInternal.
-    function addDomainAuthorityOnly(uint256 _domainHash, address _domainAuthority, address _domainOwner) external {
-        addDomainInternal(_domainHash, _domainAuthority, address(0), _domainOwner);
-    }
-
-    function addDomainOrgInfoOnly(uint256 _domainHash, address _orgInfo, address _domainOwner) external {
-        addDomainInternal(_domainHash, address(0), _orgInfo, _domainOwner);
+    function addDomain(uint256 _domainHash, address _domainAuthority, address _orgInfo, address _domainOwner) external onlyOwner {
+        // Check that the entry does not exist before adding it.
+        require(records[_domainHash].owner == address(0));
+        emit DomainAdded(_domainHash);
+        records[_domainHash] = Record(_domainAuthority, _orgInfo, _domainOwner);
     }
 
     function removeDomain(uint256 _domainHash) external onlyOwner {
         // Only allow domain records to be deleted for existing domains. Throw an error to
         // indicate to the calling application that something unexpected has happened.
         require(records[_domainHash].owner != address(0));
-
         emit DomainRemoved(_domainHash);
         delete records[_domainHash];
     }
-
 
     function changeAuthority(uint256 _domainHash, address _newDomainAuthority) external onlyDomainOwner(_domainHash) {
         emit DomainAuthorityChanged(_domainHash, _newDomainAuthority);
         records[_domainHash].authority = _newDomainAuthority;
     }
 
-
     function changeOrgInfo(uint256 _domainHash, address _newOrgInfo) external onlyDomainOwner(_domainHash) {
         emit DomainInfoChanged(_domainHash, _newOrgInfo);
         records[_domainHash].orgInfo = _newOrgInfo;
     }
 
-
-    // @Override
     function changeOwner(uint256 _domainHash, address _newDomainOwner) external onlyDomainOwner(_domainHash) {
         emit DomainOwnerChanged(_domainHash, _newDomainOwner);
         records[_domainHash].owner = _newDomainOwner;
@@ -83,7 +70,6 @@ contract ERA_v1 is EthereumRegistrationAuthorityInterface, Ownable {
     function hasDomain(uint256 _domainHash) external view returns (bool) {
         return records[_domainHash].owner != address(0);
     }
-
 
     function getDomainOwner(uint256 _domainHash) external view returns (address) {
         return records[_domainHash].owner;
@@ -100,13 +86,4 @@ contract ERA_v1 is EthereumRegistrationAuthorityInterface, Ownable {
     function getVersion() external pure returns (uint16) {
         return VERSION_ONE;
     }
-
-
-    function addDomainInternal(uint256 _domainHash, address _domainAuthority, address _orgInfo, address _domainOwner) private onlyOwner {
-        // Check that the entry does not exist before adding it.
-        require(records[_domainHash].owner == address(0));
-        emit DomainAdded(_domainHash);
-        records[_domainHash] = Record(_domainAuthority, _orgInfo, _domainOwner);
-    }
-
 }

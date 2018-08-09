@@ -42,8 +42,7 @@ interface EthereumRegistrationAuthorityInterface {
      * @param _domainOwner      Account entitled to update the _domainAuthority address.
      */
     function addDomain(uint256 _domainHash, address _domainAuthority, address _orgInfo, address _domainOwner) external;
-    function addDomainAuthorityOnly(uint256 _domainHash, address _domainAuthority, address _domainOwner) external;
-    function addDomainOrgInfoOnly(uint256 _domainHash, address _orgInfo, address _domainOwner) external;
+
     function removeDomain(uint256 _domainHash) external;
 
 

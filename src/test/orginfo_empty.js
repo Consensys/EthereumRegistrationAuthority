@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License.
  */
 /**
- * OrgInfo_v1.sol unitinialised tests.
+ * OrgInfo_v1.sol uninitialised tests.
  *
  * The tests in this file check the behaviour of the OrgInfo contract when no key-values have
  * been added to it.

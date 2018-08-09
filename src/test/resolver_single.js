@@ -49,7 +49,7 @@ contract('Resolver: Single Domain', function(accounts) {
             testDomainHashP3 = web3.utils.keccak256(common.TEST_DOMAIN_P3);
 
             const domainOwner = accounts[1];
-            await eraInterface.addDomainOrgInfoOnly(testDomainHash, testOrgInfoAddress1, domainOwner);
+            await eraInterface.addDomain(testDomainHash, "0", testOrgInfoAddress1, domainOwner);
         }
     });
 
