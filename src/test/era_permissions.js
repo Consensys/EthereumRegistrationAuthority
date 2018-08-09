@@ -22,7 +22,9 @@ contract('ERA: Permission Tests', function(accounts) {
     let common = require('./common');
 
     const testAuthAddress1 = "0x0000000000000000000000000000000000000001";
+    const testAuthAddress2 = "0x0000000000000000000000000000000000000002";
     const testOrgInfoAddress1 = "0x0000000000000000000000000000000000000011";
+    const testOrgInfoAddress2 = "0x0000000000000000000000000000000000000012";
     const testDomainHash1 = "0x101";
 
     // accounts[0], the default account for Truffle, is the ERA owner.
@@ -90,5 +92,34 @@ contract('ERA: Permission Tests', function(accounts) {
         assert.equal(didNotTriggerError, false, "Unexpectedly, transaction changeOwner from the wrong account didn't cause a revert to be called");
     });
 
-    // TODO test modifying a domain record
+    it("changeAuthority when not owner", async function() {
+        let eraInterface = await common.getNewERA();
+        // Add the domain to be tested.
+        await eraInterface.addDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner);
+        let didNotTriggerError = false;
+        try {
+            await eraInterface.changeAuthority(testDomainHash1, testAuthAddress2, {from: notDomainOwner});
+            didNotTriggerError = true;
+        } catch(err) {
+            // Expect that a revert will be called: see assert below.
+            // console.log("ERROR! " + err.message);
+        }
+        assert.equal(didNotTriggerError, false, "Unexpectedly, transaction changeAuthority from the wrong account didn't cause a revert to be called");
+    });
+
+    it("changeOrgInfo when not owner", async function() {
+        let eraInterface = await common.getNewERA();
+        // Add the domain to be to have ownership change.
+        await eraInterface.addDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner);
+        let didNotTriggerError = false;
+        try {
+            await eraInterface.changeOrgInfo(testDomainHash1, testOrgInfoAddress2, {from: notDomainOwner});
+            didNotTriggerError = true;
+        } catch(err) {
+            // Expect that a revert will be called: see assert below.
+            // console.log("ERROR! " + err.message);
+        }
+        assert.equal(didNotTriggerError, false, "Unexpectedly, transaction changeOrgInfo from the wrong account didn't cause a revert to be called");
+    });
 });
+
