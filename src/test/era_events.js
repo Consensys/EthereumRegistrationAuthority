@@ -11,38 +11,34 @@
  * specific language governing permissions and limitations under the License.
  */
 /**
- * ERA_v1.sol unitinialised tests.
+ * ERA_v1.sol test events are triggered as expected.
  *
- * The tests in this file check the behaviour of the ERA contract when no domains have
- * been added to it.
  */
-contract('ERA: Empty Tests', function(accounts) {
+contract('ERA: Event Tests', function(accounts) {
     let common = require('./common');
+
+    const domainOwner = accounts[1];
 
     // Used when assigning a domain to a dummy address.
     const testAuthAddress1 = "0x0000000000000000000000000000000000000001";
-
-
+    const testOrgInfoAddress1 = "0x0000000000000000000000000000000000000011";
     const testDomainHash1 = "0x101";
+
 
 
     // Pass in a contract instance and expected value to retrieve the number of emitted events and run an assertion.
     function assertDomainAddedEventNum(inContract, expected) {
-        inContract.DomainAdded({}, {fromBlock: 0, toBlock: "latest"}).get((error,result) => (assert.equal(expected, result.length)));
+        inContract.DomainAddUpdate({}, {fromBlock: 0, toBlock: "latest"}).get((error,result) => (assert.equal(expected, result.length)));
     }
 
-    it("removeDomain", async function() {
+
+    it("add one domain", async function() {
         let eraInterface = await common.getNewERA();
 
-        let didNotTriggerError = false;
-        try {
-            await eraInterface.removeDomain(testDomainHash1);
-            didNotTriggerError = true;
-        } catch(err) {
-            // Expect that a revert will be called as the transaction is being sent by an account other than the owner.
-            //console.log("ERROR! " + err.message);
-        }
+        await eraInterface.addUpdateDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner);
 
-        assert.equal(didNotTriggerError, false, "Unexpectedly, transaction removeDomain on a domain that doesn't exist didn't cause a revert to be called");
+        const expected = 1;
+        eraInterface.DomainAddUpdate({}, {fromBlock: 0, toBlock: "latest"}).get((error,result) => (assert.equal(expected, result.length)));
+
     });
 });

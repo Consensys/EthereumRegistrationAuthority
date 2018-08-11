@@ -16,6 +16,7 @@
 
 const ResolverImplementation = artifacts.require("./Resolver_v1.sol");
 const ERAImplementation = artifacts.require("./ERA_v1.sol");
+const ERAImplementation2 = artifacts.require("./ERA_v2.sol");
 const OrgInfoImplementation = artifacts.require("./OrgInfo_v1.sol");
 
 // All tests of the public API must be tested via the interface. This ensures all functions
@@ -40,6 +41,11 @@ module.exports = {
 
     getNewERA: async function() {
         let eraInstance = await ERAImplementation.new();
+        let eraAddress = eraInstance.address;
+        return await ERAInterface.at(eraAddress);
+    },
+    getNewERAv2: async function() {
+        let eraInstance = await ERAImplementation2.new();
         let eraAddress = eraInstance.address;
         return await ERAInterface.at(eraAddress);
     },

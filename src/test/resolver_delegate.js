@@ -101,10 +101,10 @@ contract('Resolver: Delegate', function(accounts) {
         eraAddress4 = eraInstance4.address;
         let eraInterface4 = await AbstractERA.at(eraAddress4);
 
-        await eraInterface1.addDomain(testDomainHashP3, eraAddress2, 0, domainOwner);
-        await eraInterface2.addDomain(testDomainHashP2, eraAddress3, 0, domainOwner);
-        await eraInterface3.addDomain(testDomainHashP1, eraAddress4, 0, domainOwner);
-        await eraInterface4.addDomain(testDomainHash, 0, testOrgInfoAddress1, domainOwner);
+        await eraInterface1.addUpdateDomain(testDomainHashP3, eraAddress2, 0, domainOwner);
+        await eraInterface2.addUpdateDomain(testDomainHashP2, eraAddress3, 0, domainOwner);
+        await eraInterface3.addUpdateDomain(testDomainHashP1, eraAddress4, 0, domainOwner);
+        await eraInterface4.addUpdateDomain(testDomainHash, 0, testOrgInfoAddress1, domainOwner);
     }
 
     async function setupResolver() {

@@ -83,7 +83,7 @@ contract('Resolver: No Data Tests', function(accounts) {
         eraAddress = eraInstance.address;
         let eraInterface = await AbstractERA.at(eraAddress);
 
-        const resultAddDomain = await eraInterface.addDomain(testDomainHash, 0, testOrgInfoAddress1, domainOwner);
+        const resultAddDomain = await eraInterface.addUpdateDomain(testDomainHash, 0, testOrgInfoAddress1, domainOwner);
     }
 
     async function setupResolver() {

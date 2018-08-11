@@ -47,11 +47,11 @@ contract('ERA: Permission Tests', function(accounts) {
         assert.equal(didNotTriggerError, false, "Unexpectedly, transaction transferOwnership from the wrong account didn't cause a revert to be called");
     });
 
-    it("addDomain when not owner", async function() {
+    it("addUpdateDomain when not owner", async function() {
         let eraInterface = await common.getNewERA();
         let didNotTriggerError = false;
         try {
-            await eraInterface.addDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner, {from: notEraOwner});
+            await eraInterface.addUpdateDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner, {from: notEraOwner});
             didNotTriggerError = true;
         } catch(err) {
             // Expect that a revert will be called: see assert below.
@@ -63,7 +63,7 @@ contract('ERA: Permission Tests', function(accounts) {
     it("removeDomain when not owner", async function() {
         let eraInterface = await common.getNewERA();
         // Add the domain to be deleted.
-        await eraInterface.addDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner);
+        await eraInterface.addUpdateDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner);
 
         let didNotTriggerError = false;
         try {
@@ -77,49 +77,5 @@ contract('ERA: Permission Tests', function(accounts) {
         assert.equal(didNotTriggerError, false, "Unexpectedly, transaction removeDomain from the wrong account didn't cause a revert to be called");
     });
 
-    it("changeOwner when not owner", async function() {
-        let eraInterface = await common.getNewERA();
-        // Add the domain to be to have ownership change.
-        await eraInterface.addDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner);
-        let didNotTriggerError = false;
-        try {
-            await eraInterface.changeOwner(testDomainHash1, notDomainOwner, {from: notDomainOwner});
-            didNotTriggerError = true;
-        } catch(err) {
-            // Expect that a revert will be called: see assert below.
-            // console.log("ERROR! " + err.message);
-        }
-        assert.equal(didNotTriggerError, false, "Unexpectedly, transaction changeOwner from the wrong account didn't cause a revert to be called");
-    });
-
-    it("changeAuthority when not owner", async function() {
-        let eraInterface = await common.getNewERA();
-        // Add the domain to be tested.
-        await eraInterface.addDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner);
-        let didNotTriggerError = false;
-        try {
-            await eraInterface.changeAuthority(testDomainHash1, testAuthAddress2, {from: notDomainOwner});
-            didNotTriggerError = true;
-        } catch(err) {
-            // Expect that a revert will be called: see assert below.
-            // console.log("ERROR! " + err.message);
-        }
-        assert.equal(didNotTriggerError, false, "Unexpectedly, transaction changeAuthority from the wrong account didn't cause a revert to be called");
-    });
-
-    it("changeOrgInfo when not owner", async function() {
-        let eraInterface = await common.getNewERA();
-        // Add the domain to be to have ownership change.
-        await eraInterface.addDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner);
-        let didNotTriggerError = false;
-        try {
-            await eraInterface.changeOrgInfo(testDomainHash1, testOrgInfoAddress2, {from: notDomainOwner});
-            didNotTriggerError = true;
-        } catch(err) {
-            // Expect that a revert will be called: see assert below.
-            // console.log("ERROR! " + err.message);
-        }
-        assert.equal(didNotTriggerError, false, "Unexpectedly, transaction changeOrgInfo from the wrong account didn't cause a revert to be called");
-    });
 });
 

@@ -19,62 +19,12 @@
 contract('ERA: Empty Tests', function(accounts) {
     let common = require('./common');
 
-    // Used when assigning a domain to a dummy address.
-    const testAuthAddress1 = "0x0000000000000000000000000000000000000001";
     const testDomainHash1 = "0x101";
 
 
     it("removeDomain", async function() {
         let eraInterface = await common.getDeployedERA();
-        let didNotTriggerError = false;
-        try {
-            await eraInterface.removeDomain(testDomainHash1);
-            didNotTriggerError = true;
-        } catch(err) {
-            // Expect that a revert will be called: see assert below.
-            // console.log("ERROR! " + err.message);
-        }
-        assert.equal(didNotTriggerError, false, "Unexpectedly, transaction removeDomain on a domain that doesn't exist didn't cause a revert to be called");
-    });
-
-    it("changeAuthority", async function() {
-        let eraInterface = await common.getDeployedERA();
-        let didNotTriggerError = false;
-        try {
-            await eraInterface.changeAuthority(testDomainHash1, testAuthAddress1);
-            didNotTriggerError = true;
-        } catch(err) {
-            // Expect that a revert will be called: see assert below.
-            // console.log("ERROR! " + err.message);
-        }
-        assert.equal(didNotTriggerError, false, "Unexpectedly, transaction changeAuthority on a domain that doesn't exist didn't cause a revert to be called");
-    });
-
-    it("changeOrgInfo", async function() {
-        let eraInterface = await common.getDeployedERA();
-        let didNotTriggerError = false;
-        try {
-            await eraInterface.changeOrgInfo(testDomainHash1, testAuthAddress1);
-            didNotTriggerError = true;
-        } catch(err) {
-            // Expect that a revert will be called: see assert below.
-            // console.log("ERROR! " + err.message);
-        }
-        assert.equal(didNotTriggerError, false, "Unexpectedly, transaction changeOrgInfo on a domain that doesn't exist didn't cause a revert to be called");
-    });
-
-
-    it("changeOwner", async function() {
-        let eraInterface = await common.getDeployedERA();
-        let didNotTriggerError = false;
-        try {
-            await eraInterface.changeOwner(testDomainHash1, testAuthAddress1);
-            didNotTriggerError = true;
-        } catch(err) {
-            // Expect that a revert will be called: see assert below.
-            // console.log("ERROR! " + err.message);
-        }
-        assert.equal(didNotTriggerError, false, "Unexpectedly, transaction changeOwner on a domain that doesn't exist didn't cause a revert to be called");
+        await eraInterface.removeDomain(testDomainHash1);
     });
 
     it("hasDomain", async function() {

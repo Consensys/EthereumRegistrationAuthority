@@ -11,47 +11,30 @@
  * specific language governing permissions and limitations under the License.
  */
 /**
- * ERA_v1.sol tests which involve a single domain in a single ERA.
- *
- *
+ * ERA_v1.sol test that when a domain is added, information added is available as expected.
  *
  * Note: transactions by default use account 0 in test rpc.
  */
-const ERA = artifacts.require("./ERA_v1.sol");
-
-// All tests of the public API must be tested via the interface. This ensures all functions
-// which are assumed to be part of the public API actually are in the interface.
-const AbstractERA = artifacts.require("./EthereumRegistrationAuthorityInterface.sol");
-
 contract('ERA: Testing a single domain in an ERA', function(accounts) {
-    let eraInstance;
+    let common = require('./common');
 
-    const zeroAddress = "0x0";
+    const domainOwner = accounts[1];
+
 
     const testAuthAddress1 = "0x0000000000000000000000000000000000000001";
-    const testAuthAddress2 = "0x2";
     const testOrgInfoAddress1 = "0x0000000000000000000000000000000000000011";
-    const testOrgInfoAddress2 = "0x12";
 
 
     const testDomainHash1 = "0x101";
     const testDomainHash2 = "0x102";
 
 
-    // Pass in a contract instance and expected value to retrieve the number of emitted events and run an assertion.
-    function assertDomainAddedEventNum(inContract, expected) {
-        inContract.DomainAdded({}, {fromBlock: 0, toBlock: "latest"}).get((error,result) => (assert.equal(expected, result.length)));
-    }
-
-
     it("add one domain", async function() {
-        const domainOwner = accounts[4];
+        let eraInterface = await common.getNewERA();
+
 
         //Note: transactions by default use account 0 in test rpc.
-        let eraInstance = await ERA.new();
-        let eraAddress = eraInstance.address;
-        let eraInterface = await AbstractERA.at(eraAddress);
-        const resultAddDomain = await eraInterface.addDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner);
+        const resultAddDomain = await eraInterface.addUpdateDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner);
         //console.log("Transaction Hash");
         //console.log(resultAddDomain.tx);
         //console.log("Events");
@@ -73,12 +56,6 @@ contract('ERA: Testing a single domain in an ERA', function(accounts) {
         const orgInfoAddr1 = await eraInterface.getOrgInfo.call(testDomainHash1);
         assert.equal(testOrgInfoAddress1, orgInfoAddr1, "Org Info address");
         //console.log("OrgInfo Address: ", orgInfoAddr1);
-
-
-        //TODO The test below is not passing. It is not detecting the event.
-//        assertDomainAddedEventNum(this.eraInstance, 1);
     });
-
-
 
 });
