@@ -21,69 +21,70 @@ import "./ownable.sol";
  * See EthereumRegistrationAuthorityInterface.sol for documentation of the public API.
  */
 contract ERA_v1 is EthereumRegistrationAuthorityInterface, Ownable {
-    uint16 constant private VERSION_ONE = 1;
+    uint16 constant private VERSION = 1;
+    address constant private ZERO = 0;
 
-    struct Record {
-        address authority;
-        address orgInfo;
-        address owner;
-    }
-    mapping(uint256=>Record) private records;
+    // Maps of Keccak256(domain name) to records.
+    // Having separate maps is more gas efficient than having a map with a record containing the three values.
+    mapping(uint256=>address) private authorityMap;
+    mapping(uint256=>address) private orgInfoMap;
+    mapping(uint256=>address) private domainOwnerMap;
+
 
     // Permits modifications only by the owner of the specified domain.
     modifier onlyDomainOwner(uint256 _domainHash) {
-        require(records[_domainHash].owner == msg.sender);
+        address tempOwner = domainOwnerMap[_domainHash];
+        if (tempOwner == 0) {
+            tempOwner = owner;
+        }
+        require(tempOwner == msg.sender);
         _;
     }
 
+    function addUpdateDomain(uint256 _domainHash, address _domainAuthority, address _orgInfo, address _domainOwner) external onlyDomainOwner(_domainHash) {
+        emit DomainAddUpdate(_domainHash, _domainAuthority, _orgInfo, _domainOwner);
 
-    function addDomain(uint256 _domainHash, address _domainAuthority, address _orgInfo, address _domainOwner) external onlyOwner {
-        // Check that the entry does not exist before adding it.
-        require(records[_domainHash].owner == address(0));
-        emit DomainAdded(_domainHash);
-        records[_domainHash] = Record(_domainAuthority, _orgInfo, _domainOwner);
+        if (_domainAuthority != ZERO) {
+            authorityMap[_domainHash] = _domainAuthority;
+        }
+        if (_orgInfo != ZERO) {
+            orgInfoMap[_domainHash] = _orgInfo;
+        }
+        if (_domainOwner != ZERO) {
+            domainOwnerMap[_domainHash] = _domainOwner;
+        }
     }
 
     function removeDomain(uint256 _domainHash) external onlyOwner {
-        // Only allow domain records to be deleted for existing domains. Throw an error to
-        // indicate to the calling application that something unexpected has happened.
-        require(records[_domainHash].owner != address(0));
         emit DomainRemoved(_domainHash);
-        delete records[_domainHash];
-    }
-
-    function changeAuthority(uint256 _domainHash, address _newDomainAuthority) external onlyDomainOwner(_domainHash) {
-        emit DomainAuthorityChanged(_domainHash, _newDomainAuthority);
-        records[_domainHash].authority = _newDomainAuthority;
-    }
-
-    function changeOrgInfo(uint256 _domainHash, address _newOrgInfo) external onlyDomainOwner(_domainHash) {
-        emit DomainInfoChanged(_domainHash, _newOrgInfo);
-        records[_domainHash].orgInfo = _newOrgInfo;
-    }
-
-    function changeOwner(uint256 _domainHash, address _newDomainOwner) external onlyDomainOwner(_domainHash) {
-        emit DomainOwnerChanged(_domainHash, _newDomainOwner);
-        records[_domainHash].owner = _newDomainOwner;
+        if (authorityMap[_domainHash] != ZERO) {
+            delete authorityMap[_domainHash];
+        }
+        if (orgInfoMap[_domainHash] != ZERO) {
+            delete orgInfoMap[_domainHash];
+        }
+        if (domainOwnerMap[_domainHash] != ZERO) {
+            delete domainOwnerMap[_domainHash];
+        }
     }
 
     function hasDomain(uint256 _domainHash) external view returns (bool) {
-        return records[_domainHash].owner != address(0);
+        return !(authorityMap[_domainHash] == ZERO && orgInfoMap[_domainHash] == ZERO && domainOwnerMap[_domainHash] == ZERO);
     }
 
     function getDomainOwner(uint256 _domainHash) external view returns (address) {
-        return records[_domainHash].owner;
+        return domainOwnerMap[_domainHash];
     }
 
     function getAuthority(uint256 _domainHash) external view returns (address) {
-        return records[_domainHash].authority;
+        return authorityMap[_domainHash];
     }
 
     function getOrgInfo(uint256 _domainHash) external view returns (address) {
-        return records[_domainHash].orgInfo;
+        return orgInfoMap[_domainHash];
     }
 
     function getVersion() external pure returns (uint16) {
-        return VERSION_ONE;
+        return VERSION;
     }
 }

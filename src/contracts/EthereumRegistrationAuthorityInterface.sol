@@ -16,49 +16,42 @@ pragma solidity ^0.4.23;
  * Interface for Ethereum Registration Authorities.
  */
 interface EthereumRegistrationAuthorityInterface {
-    //***************************** Add and Remove Domains ******************************
-    // Permissions: Ethereum Registration Authority owner only.
-
-
     /**
-     * Top Level Domain LeDomain name, name hash: message digest(second level domain . top level domain)
-     * The idea is not obfuscation - it is so the name used for look-up is a fixed length to give deterministic gas cost.
+     * Add or update a domain record. Domain records are indexed based on the domain hash or a domain name.
+     * The domain hash is calculated as:
      *
-     * _domainHash = message digest(top-level domain)
+     * _domainHash = keccak256(top-level domain)
      * or
-     * _domainHash = message digest(second-level domain '.' top-level domain)
+     * _domainHash = keccak256(second-level domain '.' top-level domain)
      * or
-     * _domainHash = message digest(sub-domain '.' second-level domain '.' top-level domain)
+     * _domainHash = keccak256(sub-domain '.' second-level domain '.' top-level domain)
      * or
-     * _domainHash = message digest(sub-domain '.' sub-domain '.' second-level domain '.' top-level domain)
+     * _domainHash = keccak256(sub-domain '.' sub-domain '.' second-level domain '.' top-level domain)
      * etc
      *
-     * Search algorithm:
-     * Regquest
-     *
-     * @param _domainHash       Keccak256 message digest of a complete or partial domain name.
+     * @param _domainHash       Keccak256 message digest of a complete or partial domain name to add or update a record
+     *                           for.
      * @param _domainAuthority  Contract to resolve sub-domains. Another copy of this contract.
-     * @param _orgInfo          Contract which holds Organisation information for the domain name identitied by _domainHash.
-     * @param _domainOwner      Account entitled to update the _domainAuthority address.
+     *                           Set this parameter to 0x00 if the domain authority contract address should not be set
+     *                           or changed.
+     * @param _orgInfo          Contract which holds organisation information for the domain name identitied by
+     *                           _domainHash. Set this parameter to 0x00 if the organisation information contract
+     *                           address should not be set or update.
+     * @param _domainOwner      Account entitled to update the _domainAuthority or the _orgInfo address for this domain
+     *                           hash. Set this parameter to 0x00 if the domain owner address should not be changed.
+     *                           Having this parameter 0x00 when setting a domain record for the first time indicates
+     *                           the Ethereum Registration Authority contract owner is the domain owner for this
+     *                           domain record.
      */
-    function addDomain(uint256 _domainHash, address _domainAuthority, address _orgInfo, address _domainOwner) external;
-
-    function removeDomain(uint256 _domainHash) external;
-
-
-    //***************************** Domain Record Update ******************************
-    // Permissions: Domain Record owner only.
-
-    function changeAuthority(uint256 _domainHash, address _newDomainAuthority) external;
-    function changeOrgInfo(uint256 _domainHash, address _newOrgInfo) external;
+    function addUpdateDomain(uint256 _domainHash, address _domainAuthority, address _orgInfo, address _domainOwner) external;
 
     /**
-     * Transfers ownership of a domain record to a new address. May only be called by the current
-     * owner of the domain.
-     * @param _domainHash  The domain record to transfer ownership of.
-     * @param _newDomainOwner    The address of the new domain record owner.
+     * Remove a domain record.
+     *
+     * @param _domainHash      Message digest of domain name for domain record to remove.
      */
-    function changeOwner(uint256 _domainHash, address _newDomainOwner) external;
+    function removeDomain(uint256 _domainHash) external;
+
 
     /**
     * Returns true if the ERA has a domain record for the domain hash.
@@ -75,9 +68,6 @@ interface EthereumRegistrationAuthorityInterface {
     function getVersion() external pure returns (uint16);
 
 
-    event DomainAdded(uint256 _domainHash);
-    event DomainRemoved(uint256 _domainHash);
-    event DomainAuthorityChanged(uint256 _domainHash, address _newDomainAuthority);
-    event DomainInfoChanged(uint256 _domainHash, address _newOrgInfo);
-    event DomainOwnerChanged(uint256 _domainHash, address _newOwner);
+    event DomainAddUpdate(uint256 indexed _domainHash,  address _domainAuthority, address _orgInfo, address _owner);
+    event DomainRemoved(uint256 indexed _domainHash);
 }
