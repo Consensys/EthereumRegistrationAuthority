@@ -22,66 +22,75 @@ import "./ownable.sol";
  */
 contract ERA_v1 is EthereumRegistrationAuthorityInterface, Ownable {
     uint16 constant private VERSION = 1;
-    address constant private ZERO = 0;
+
+    // Zero is the default value when a storage location has not been set. It is used to indicate that a value
+    // has not been set in a storage location.
+    address constant private STORAGE_LOCATION_NOT_SET = 0;
+
+    // One is used to indicate that a location should not be set in the add or update function. Not having this
+    // equal to the value used when a location is not set means that a value can be set to 0 indicating it is not
+    // in use.
+    address constant private DO_NOT_CHANGE = 1;
 
     // Maps of Keccak256(domain name) to records.
-    // Having separate maps is more gas efficient than having a map with a record containing the three values.
+    // Having separate maps is slightly more gas efficient than having a map with a record containing the three values.
     mapping(uint256=>address) private authorityMap;
-    mapping(uint256=>address) private orgInfoMap;
+    mapping(uint256=>address) private domainInfoMap;
     mapping(uint256=>address) private domainOwnerMap;
 
 
     // Permits modifications only by the owner of the specified domain.
+    // If the owner of a domain is 0 then the owner is the owner of the ERA contract.
     modifier onlyDomainOwner(uint256 _domainHash) {
         address tempOwner = domainOwnerMap[_domainHash];
-        if (tempOwner == 0) {
+        if (tempOwner == STORAGE_LOCATION_NOT_SET) {
             tempOwner = owner;
         }
         require(tempOwner == msg.sender);
         _;
     }
 
-    function addUpdateDomain(uint256 _domainHash, address _domainAuthority, address _orgInfo, address _domainOwner) external onlyDomainOwner(_domainHash) {
-        emit DomainAddUpdate(_domainHash, _domainAuthority, _orgInfo, _domainOwner);
+    function addUpdateDomain(uint256 _domainHash, address _domainAuthority, address _domainInfo, address _domainOwner) external onlyDomainOwner(_domainHash) {
+        emit DomainAddUpdate(_domainHash, _domainAuthority, _domainInfo, _domainOwner);
 
-        if (_domainAuthority != ZERO) {
+        if (_domainAuthority != DO_NOT_CHANGE) {
             authorityMap[_domainHash] = _domainAuthority;
         }
-        if (_orgInfo != ZERO) {
-            orgInfoMap[_domainHash] = _orgInfo;
+        if (_domainInfo != DO_NOT_CHANGE) {
+            domainInfoMap[_domainHash] = _domainInfo;
         }
-        if (_domainOwner != ZERO) {
+        if (_domainOwner != DO_NOT_CHANGE) {
             domainOwnerMap[_domainHash] = _domainOwner;
         }
     }
 
     function removeDomain(uint256 _domainHash) external onlyOwner {
         emit DomainRemoved(_domainHash);
-        if (authorityMap[_domainHash] != ZERO) {
+        if (authorityMap[_domainHash] != STORAGE_LOCATION_NOT_SET) {
             delete authorityMap[_domainHash];
         }
-        if (orgInfoMap[_domainHash] != ZERO) {
-            delete orgInfoMap[_domainHash];
+        if (domainInfoMap[_domainHash] != STORAGE_LOCATION_NOT_SET) {
+            delete domainInfoMap[_domainHash];
         }
-        if (domainOwnerMap[_domainHash] != ZERO) {
+        if (domainOwnerMap[_domainHash] != STORAGE_LOCATION_NOT_SET) {
             delete domainOwnerMap[_domainHash];
         }
     }
 
     function hasDomain(uint256 _domainHash) external view returns (bool) {
-        return !(authorityMap[_domainHash] == ZERO && orgInfoMap[_domainHash] == ZERO && domainOwnerMap[_domainHash] == ZERO);
-    }
-
-    function getDomainOwner(uint256 _domainHash) external view returns (address) {
-        return domainOwnerMap[_domainHash];
+        return !(authorityMap[_domainHash] == STORAGE_LOCATION_NOT_SET && domainInfoMap[_domainHash] == STORAGE_LOCATION_NOT_SET && domainOwnerMap[_domainHash] == STORAGE_LOCATION_NOT_SET);
     }
 
     function getAuthority(uint256 _domainHash) external view returns (address) {
         return authorityMap[_domainHash];
     }
 
-    function getOrgInfo(uint256 _domainHash) external view returns (address) {
-        return orgInfoMap[_domainHash];
+    function getDomainInfo(uint256 _domainHash) external view returns (address) {
+        return domainInfoMap[_domainHash];
+    }
+
+    function getDomainOwner(uint256 _domainHash) external view returns (address) {
+        return domainOwnerMap[_domainHash];
     }
 
     function getVersion() external pure returns (uint16) {

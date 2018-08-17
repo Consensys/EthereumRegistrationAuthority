@@ -25,13 +25,13 @@
  */
 const Resolver = artifacts.require("./Resolver_v1.sol");
 const ERA = artifacts.require("./ERA_v1.sol");
-const OrgInfo = artifacts.require("./OrgInfo_v1.sol");
+const DomainInfo = artifacts.require("./DomainInfo_v1.sol");
 
 // All tests of the public API must be tested via the interface. This ensures all functions
 // which are assumed to be part of the public API actually are in the interface.
 const AbstractResolver = artifacts.require("./ResolverInterface.sol");
 const AbstractERA = artifacts.require("./EthereumRegistrationAuthorityInterface.sol");
-const AbstractOrgInfo = artifacts.require("./OrgInfoInterface.sol");
+const AbstractDomainInfo = artifacts.require("./DomainInfoInterface.sol");
 
 
 const SHA3 = require('sha3');
@@ -101,14 +101,14 @@ contract('Example', function(accounts) {
 
 
 
-    let example1OrgInfoAddress;
-    let example1P1OrgInfoAddress;
-    let example3aOrgInfoAddress;
-    let example3bOrgInfoAddress;
-    let example3P1OrgInfoAddress;
-    let example3P2OrgInfoAddress;
-    let example4OrgInfoAddress;
-    let example5OrgInfoAddress;
+    let example1DomainInfoAddress;
+    let example1P1DomainInfoAddress;
+    let example3aDomainInfoAddress;
+    let example3bDomainInfoAddress;
+    let example3P1DomainInfoAddress;
+    let example3P2DomainInfoAddress;
+    let example4DomainInfoAddress;
+    let example5DomainInfoAddress;
 
 
     let resolverInterface;
@@ -159,7 +159,7 @@ contract('Example', function(accounts) {
         eraAddress = eraInstance.address;
         let eraInterface = await AbstractERA.at(eraAddress);
 
-        const resultAddDomain = await eraInterface.addDomain(testDomainHash, 0, testOrgInfoAddress1, domainOwner);
+        const resultAddDomain = await eraInterface.addDomain(testDomainHash, 0, testDomainInfoAddress1, domainOwner);
     }
 
 
@@ -185,10 +185,10 @@ contract('Example', function(accounts) {
     }
 
 
-    async function createTestOrgInfo(domainName, account, numNodes) {
-        let orgInfoInstance = await OrgInfo.new({from: account});
-        let orgInfoAddress = orgInfoInstance.address;
-        let orgInfoInterface = await AbstractOrgInfo.at(orgInfoAddress);
+    async function createTestDomainInfo(domainName, account, numNodes) {
+        let domainInfoInstance = await DomainInfo.new({from: account});
+        let domainInfoAddress = domainInfoInstance.address;
+        let domainInfoInterface = await AbstractDomainInfo.at(domainInfoAddress);
 
         // To make it to debug the output, put the domain name into the enode and encryption key.
         for (let i = 0; i < numNodes; i++) {
@@ -198,19 +198,19 @@ contract('Example', function(accounts) {
             let keyEnode = createKeyEnode(i);
             let keyEnc = createKeyEnc(i);
 
-            await orgInfoInterface.addKeyValue(keyEnode, enode, {from: account});
-            await orgInfoInterface.addKeyValue(keyEnc, enc, {from: account});
+            await domainInfoInterface.addKeyValue(keyEnode, enode, {from: account});
+            await domainInfoInterface.addKeyValue(keyEnc, enc, {from: account});
         }
         let numNodesString = "" + numNodes;
-        await orgInfoInterface.addKeyValue(keyScnodeSize, numNodesString, {from: account});
-        return orgInfoAddress;
+        await domainInfoInterface.addKeyValue(keyScnodeSize, numNodesString, {from: account});
+        return domainInfoAddress;
     }
 
 
-    async function dumpTestOrgInfo(orgInfoAddress) {
-        let orgInfoInterface = await AbstractOrgInfo.at(orgInfoAddress);
+    async function dumpTestDomainInfo(domainInfoAddress) {
+        let domainInfoInterface = await AbstractDomainInfo.at(domainInfoAddress);
 
-        let value = await orgInfoInterface.getValue.call(keyScnodeSize);
+        let value = await domainInfoInterface.getValue.call(keyScnodeSize);
         //console.log("value: " + value);
         let numNodesIncludingBlanks = parseInt(value, 10);
 
@@ -218,8 +218,8 @@ contract('Example', function(accounts) {
         for (let i = 0; i < numNodesIncludingBlanks; i++) {
             let keyEnode = createKeyEnode(i);
             let keyEnc = createKeyEnc(i);
-            let enode = await orgInfoInterface.getValue.call(keyEnode);
-            let enc = await orgInfoInterface.getValue.call(keyEnc);
+            let enode = await domainInfoInterface.getValue.call(keyEnode);
+            let enc = await domainInfoInterface.getValue.call(keyEnc);
             //console.log("Node(" + i + ") enode: " + enode);
             //console.log("Node(" + i + ") enc: " + enc);
         }
@@ -260,65 +260,65 @@ contract('Example', function(accounts) {
 
         //console.log("HERE3");
         // Set-up org info for sidechains.example.com.au and example.com.au
-        example1OrgInfoAddress = await createTestOrgInfo(domainExample1, accounts[3], 2);
-        example1P1OrgInfoAddress = await createTestOrgInfo(domainExample1P1, accounts[3], 1);  // In a real system, this might be some other data.
+        example1DomainInfoAddress = await createTestDomainInfo(domainExample1, accounts[3], 2);
+        example1P1DomainInfoAddress = await createTestDomainInfo(domainExample1P1, accounts[3], 1);  // In a real system, this might be some other data.
 
         //console.log("HERE4");
         // Set-up org info for sc1.sidechains.bank.com, sc2.sidechains.bank.com, sidechains.bank.com, and bank.com
-        example3aOrgInfoAddress = await createTestOrgInfo(domainExample3a, accounts[5], 2);
-        example3bOrgInfoAddress = await createTestOrgInfo(domainExample3b, accounts[5], 2);
-        example3P1OrgInfoAddress = await createTestOrgInfo(domainExample3P1, accounts[5], 1);
-        example3P2OrgInfoAddress = await createTestOrgInfo(domainExample3P2, accounts[5], 1);
+        example3aDomainInfoAddress = await createTestDomainInfo(domainExample3a, accounts[5], 2);
+        example3bDomainInfoAddress = await createTestDomainInfo(domainExample3b, accounts[5], 2);
+        example3P1DomainInfoAddress = await createTestDomainInfo(domainExample3P1, accounts[5], 1);
+        example3P2DomainInfoAddress = await createTestDomainInfo(domainExample3P2, accounts[5], 1);
 
         //console.log("HERE5");
         // Set-up org info for schosting.com: nodes 0 to 5.
-        example5OrgInfoAddress = await createTestOrgInfo(domainExample5, accounts[7], 6);
-        let orgInfoInterface = await AbstractOrgInfo.at(example5OrgInfoAddress);
+        example5DomainInfoAddress = await createTestDomainInfo(domainExample5, accounts[7], 6);
+        let domainInfoInterface = await AbstractDomainInfo.at(example5DomainInfoAddress);
         // Add an additional sidechain node: node 6.
         let keyEnode = createKeyEnode(6);
         let keyEnc = createKeyEnc(6);
         let enode = createValueEnode(domainExample5, 6);
         let enc = createValueEnc(domainExample5, 6);
-        await orgInfoInterface.addKeyValue(keyEnode, enode, {from: accounts[7]});
-        await orgInfoInterface.addKeyValue(keyEnc, enc, {from: accounts[7]});
+        await domainInfoInterface.addKeyValue(keyEnode, enode, {from: accounts[7]});
+        await domainInfoInterface.addKeyValue(keyEnc, enc, {from: accounts[7]});
         // Remove sidechain node 1 and 3.
         keyEnode = createKeyEnode(1);
         keyEnc = createKeyEnc(1);
-        await orgInfoInterface.removeKeyValue(keyEnode, {from: accounts[7]});
-        await orgInfoInterface.removeKeyValue(keyEnc, {from: accounts[7]});
+        await domainInfoInterface.removeKeyValue(keyEnode, {from: accounts[7]});
+        await domainInfoInterface.removeKeyValue(keyEnc, {from: accounts[7]});
         keyEnode = createKeyEnode(3);
         keyEnc = createKeyEnc(3);
-        await orgInfoInterface.removeKeyValue(keyEnode, {from: accounts[7]});
-        await orgInfoInterface.removeKeyValue(keyEnc, {from: accounts[7]});
+        await domainInfoInterface.removeKeyValue(keyEnode, {from: accounts[7]});
+        await domainInfoInterface.removeKeyValue(keyEnc, {from: accounts[7]});
         // Update the size.
         let numNodesString = "7";
-        await orgInfoInterface.updateKeyValue(keyScnodeSize, numNodesString, {from: accounts[7]});
+        await domainInfoInterface.updateKeyValue(keyScnodeSize, numNodesString, {from: accounts[7]});
 
 
         //console.log("HERE6");
         // Register example.com.au's private ERA and orginfo in the public ERA1 and ERA2
-        await era1Interface.addDomain(domainExample1P1Hash, eraExample1Address, example1P1OrgInfoAddress, accounts[3], {from: accounts[0]});
-        await era2Interface.addDomain(domainExample1P1Hash, eraExample1Address, example1P1OrgInfoAddress, accounts[3], {from: accounts[1]});
+        await era1Interface.addDomain(domainExample1P1Hash, eraExample1Address, example1P1DomainInfoAddress, accounts[3], {from: accounts[0]});
+        await era2Interface.addDomain(domainExample1P1Hash, eraExample1Address, example1P1DomainInfoAddress, accounts[3], {from: accounts[1]});
         // Register sidechain.example.com.au info with the private ERA.
-        await eraExample1Interface.addDomain(domainExample1Hash, 0, example1OrgInfoAddress, accounts[3], {from: accounts[3]});
+        await eraExample1Interface.addDomain(domainExample1Hash, 0, example1DomainInfoAddress, accounts[3], {from: accounts[3]});
 
         //console.log("HERE7");
-        // Register somewhere.tw's orgInfo in the public ERA1. somewhere.tw uses schosting.com.
-        await era1Interface.addDomain(domainExample2Hash, 0, example5OrgInfoAddress, accounts[4], {from: accounts[0]});
+        // Register somewhere.tw's domainInfo in the public ERA1. somewhere.tw uses schosting.com.
+        await era1Interface.addDomain(domainExample2Hash, 0, example5DomainInfoAddress, accounts[4], {from: accounts[0]});
 
         //console.log("HERE7");
         // Register bank.com's private ERA in the public ERA1, ERA2, and ERA3.
-        await era1Interface.addDomain(domainExample3P2Hash, eraExample3Address, example3P2OrgInfoAddress, accounts[5], {from: accounts[0]});
-        await era2Interface.addDomain(domainExample3P2Hash, eraExample3Address, example3P2OrgInfoAddress, accounts[5], {from: accounts[1]});
-        await era3Interface.addDomain(domainExample3P2Hash, eraExample3Address, example3P2OrgInfoAddress, accounts[5], {from: accounts[2]});
-        // Register the orgInfo for sc1.sidechains.bank.com, sc2.sidechains.bank.com, sidechains.bank.com with the private ERA.
-        await eraExample3Interface.addDomain(domainExample3aHash, 0, example3aOrgInfoAddress, accounts[5], {from: accounts[5]});
-        await eraExample3Interface.addDomain(domainExample3bHash, 0, example3bOrgInfoAddress, accounts[5], {from: accounts[5]});
-        await eraExample3Interface.addDomain(domainExample3P1Hash, 0, example3P1OrgInfoAddress, accounts[5], {from: accounts[5]});
+        await era1Interface.addDomain(domainExample3P2Hash, eraExample3Address, example3P2DomainInfoAddress, accounts[5], {from: accounts[0]});
+        await era2Interface.addDomain(domainExample3P2Hash, eraExample3Address, example3P2DomainInfoAddress, accounts[5], {from: accounts[1]});
+        await era3Interface.addDomain(domainExample3P2Hash, eraExample3Address, example3P2DomainInfoAddress, accounts[5], {from: accounts[2]});
+        // Register the domainInfo for sc1.sidechains.bank.com, sc2.sidechains.bank.com, sidechains.bank.com with the private ERA.
+        await eraExample3Interface.addDomain(domainExample3aHash, 0, example3aDomainInfoAddress, accounts[5], {from: accounts[5]});
+        await eraExample3Interface.addDomain(domainExample3bHash, 0, example3bDomainInfoAddress, accounts[5], {from: accounts[5]});
+        await eraExample3Interface.addDomain(domainExample3P1Hash, 0, example3P1DomainInfoAddress, accounts[5], {from: accounts[5]});
 
         //console.log("HERE8");
-        // Register chains.bank2.com's orgInfo in the public ERA3.
-        await era3Interface.addDomain(domainExample4Hash, 0, example5OrgInfoAddress, accounts[6], {from: accounts[2]});
+        // Register chains.bank2.com's domainInfo in the public ERA3.
+        await era3Interface.addDomain(domainExample4Hash, 0, example5DomainInfoAddress, accounts[6], {from: accounts[2]});
 
 
         // const hasD1 = await era1Interface.hasDomain.call(domainExample1P1Hash);
@@ -338,49 +338,49 @@ contract('Example', function(accounts) {
         let domainHashesP3 = [0, 0, 0, 0];
 
         // TODO there is a bug in truffle / webpack for processing an array or hex big numbers.
-//        let resolvedOrgInfo = await resolverInterface.resolve.call(eras, domainHashes[0], domainHashesP1[0], domainHashesP2[0], domainHashesP3[0]);
-//        console.log("resolvedOrgInfo: " + resolvedOrgInfo);
+//        let resolvedDomainInfo = await resolverInterface.resolve.call(eras, domainHashes[0], domainHashesP1[0], domainHashesP2[0], domainHashesP3[0]);
+//        console.log("resolvedDomainInfo: " + resolvedDomainInfo);
 
 
-        //   let resolvedOrgInfos = await resolverInterface.resolve.call(eras, domainHashes, domainHashesP1, domainHashesP2, domainHashesP3);
-   //     resolvedOrgInfos.forEach(function(entry) {
+        //   let resolvedDomainInfos = await resolverInterface.resolve.call(eras, domainHashes, domainHashesP1, domainHashesP2, domainHashesP3);
+   //     resolvedDomainInfos.forEach(function(entry) {
   //          console.log("resolved Org Info: " + entry);
    //     });
 
 
 
         // Simulate calling the array based API which can't be called due to the bug in truffle / webpack.
-        let resolvedOrgInfo = await resolverInterface.resolve.call(eras[0], domainHashes[0], domainHashesP1[0], domainHashesP2[0], domainHashesP3[0]);
-        //console.log("resolvedOrgInfo (0,0): " + resolvedOrgInfo);
-        resolvedOrgInfo = await resolverInterface.resolve.call(eras[1], domainHashes[0], domainHashesP1[0], domainHashesP2[0], domainHashesP3[0]);
-        //console.log("resolvedOrgInfo (1,0): " + resolvedOrgInfo);
-        resolvedOrgInfo = await resolverInterface.resolve.call(eras[2], domainHashes[0], domainHashesP1[0], domainHashesP2[0], domainHashesP3[0]);
-        //console.log("resolvedOrgInfo (2,0): " + resolvedOrgInfo);
+        let resolvedDomainInfo = await resolverInterface.resolve.call(eras[0], domainHashes[0], domainHashesP1[0], domainHashesP2[0], domainHashesP3[0]);
+        //console.log("resolvedDomainInfo (0,0): " + resolvedDomainInfo);
+        resolvedDomainInfo = await resolverInterface.resolve.call(eras[1], domainHashes[0], domainHashesP1[0], domainHashesP2[0], domainHashesP3[0]);
+        //console.log("resolvedDomainInfo (1,0): " + resolvedDomainInfo);
+        resolvedDomainInfo = await resolverInterface.resolve.call(eras[2], domainHashes[0], domainHashesP1[0], domainHashesP2[0], domainHashesP3[0]);
+        //console.log("resolvedDomainInfo (2,0): " + resolvedDomainInfo);
 
-        resolvedOrgInfo = await resolverInterface.resolve.call(eras[0], domainHashes[1], domainHashesP1[1], domainHashesP2[1], domainHashesP3[1]);
-        //console.log("resolvedOrgInfo (0,1): " + resolvedOrgInfo);
-        resolvedOrgInfo = await resolverInterface.resolve.call(eras[1], domainHashes[1], domainHashesP1[1], domainHashesP2[1], domainHashesP3[1]);
-        //console.log("resolvedOrgInfo (1,1): " + resolvedOrgInfo);
-        resolvedOrgInfo = await resolverInterface.resolve.call(eras[2], domainHashes[1], domainHashesP1[1], domainHashesP2[1], domainHashesP3[1]);
-        //console.log("resolvedOrgInfo (2,1): " + resolvedOrgInfo);
+        resolvedDomainInfo = await resolverInterface.resolve.call(eras[0], domainHashes[1], domainHashesP1[1], domainHashesP2[1], domainHashesP3[1]);
+        //console.log("resolvedDomainInfo (0,1): " + resolvedDomainInfo);
+        resolvedDomainInfo = await resolverInterface.resolve.call(eras[1], domainHashes[1], domainHashesP1[1], domainHashesP2[1], domainHashesP3[1]);
+        //console.log("resolvedDomainInfo (1,1): " + resolvedDomainInfo);
+        resolvedDomainInfo = await resolverInterface.resolve.call(eras[2], domainHashes[1], domainHashesP1[1], domainHashesP2[1], domainHashesP3[1]);
+        //console.log("resolvedDomainInfo (2,1): " + resolvedDomainInfo);
 
-        resolvedOrgInfo = await resolverInterface.resolve.call(eras[0], domainHashes[2], domainHashesP1[2], domainHashesP2[2], domainHashesP3[2]);
-        //console.log("resolvedOrgInfo (0,2): " + resolvedOrgInfo);
-        resolvedOrgInfo = await resolverInterface.resolve.call(eras[1], domainHashes[2], domainHashesP1[2], domainHashesP2[2], domainHashesP3[2]);
-        //console.log("resolvedOrgInfo (1,2): " + resolvedOrgInfo);
-        resolvedOrgInfo = await resolverInterface.resolve.call(eras[2], domainHashes[2], domainHashesP1[2], domainHashesP2[2], domainHashesP3[2]);
-        //console.log("resolvedOrgInfo (2,2): " + resolvedOrgInfo);
+        resolvedDomainInfo = await resolverInterface.resolve.call(eras[0], domainHashes[2], domainHashesP1[2], domainHashesP2[2], domainHashesP3[2]);
+        //console.log("resolvedDomainInfo (0,2): " + resolvedDomainInfo);
+        resolvedDomainInfo = await resolverInterface.resolve.call(eras[1], domainHashes[2], domainHashesP1[2], domainHashesP2[2], domainHashesP3[2]);
+        //console.log("resolvedDomainInfo (1,2): " + resolvedDomainInfo);
+        resolvedDomainInfo = await resolverInterface.resolve.call(eras[2], domainHashes[2], domainHashesP1[2], domainHashesP2[2], domainHashesP3[2]);
+        //console.log("resolvedDomainInfo (2,2): " + resolvedDomainInfo);
 
-        resolvedOrgInfo = await resolverInterface.resolve.call(eras[0], domainHashes[3], domainHashesP1[3], domainHashesP2[3], domainHashesP3[3]);
-        //console.log("resolvedOrgInfo (0,3): " + resolvedOrgInfo);
-        resolvedOrgInfo = await resolverInterface.resolve.call(eras[1], domainHashes[3], domainHashesP1[3], domainHashesP2[3], domainHashesP3[3]);
-        //console.log("resolvedOrgInfo (1,3): " + resolvedOrgInfo);
-        resolvedOrgInfo = await resolverInterface.resolve.call(eras[2], domainHashes[3], domainHashesP1[3], domainHashesP2[3], domainHashesP3[3]);
-        //console.log("resolvedOrgInfo (2,3): " + resolvedOrgInfo);
+        resolvedDomainInfo = await resolverInterface.resolve.call(eras[0], domainHashes[3], domainHashesP1[3], domainHashesP2[3], domainHashesP3[3]);
+        //console.log("resolvedDomainInfo (0,3): " + resolvedDomainInfo);
+        resolvedDomainInfo = await resolverInterface.resolve.call(eras[1], domainHashes[3], domainHashesP1[3], domainHashesP2[3], domainHashesP3[3]);
+        //console.log("resolvedDomainInfo (1,3): " + resolvedDomainInfo);
+        resolvedDomainInfo = await resolverInterface.resolve.call(eras[2], domainHashes[3], domainHashesP1[3], domainHashesP2[3], domainHashesP3[3]);
+        //console.log("resolvedDomainInfo (2,3): " + resolvedDomainInfo);
 
 
         // Based on the resolved org info address, get the list of enode addresses and keys.
-        await dumpTestOrgInfo(resolvedOrgInfo);
+        await dumpTestDomainInfo(resolvedDomainInfo);
 
 
     });

@@ -12,7 +12,7 @@
  */
 pragma solidity ^0.4.23;
 
-import "./OrgInfoInterface.sol";
+import "./DomainInfoInterface.sol";
 import "./Ownable.sol";
 
 
@@ -20,30 +20,17 @@ import "./Ownable.sol";
 
 * Note: At present, no AddKeyValues is possible because the ABI doesn't support passing arrays of strings.
 */
-contract OrgInfo_v1 is OrgInfoInterface, Ownable {
+contract DomainInfo_v1 is DomainInfoInterface, Ownable {
     uint16 constant private VERSION_ONE = 1;
 
     mapping(uint256=>bytes) private info;
 
     function addKeyValue(uint256 _key, bytes _value) external onlyOwner {
-        // Key can't exist when adding.
-        require(info[_key].length == 0);
-        emit AddedKeyValue(_key);
         info[_key] = _value;
     }
 
     function removeKeyValue(uint256 _key) external onlyOwner {
-        // Key must exist when removing.
-        require(info[_key].length != 0);
-        emit RemovedKeyValue(_key);
         delete info[_key];
-    }
-
-    function updateKeyValue(uint256 _key, bytes _value) external onlyOwner {
-        // Key must exist when updating.
-        require(info[_key].length != 0);
-        emit UpdatedKeyValue(_key);
-        info[_key] = _value;
     }
 
     function getValue(uint256 _key) external view returns(bytes){

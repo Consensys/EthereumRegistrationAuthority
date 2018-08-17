@@ -34,7 +34,7 @@ const hexy = require("hexy");
 contract('Resolver: Delegate', function(accounts) {
     const zeroAddress = "0x0";
 
-    const testOrgInfoAddress1 = "0x0000000000000000000000000000000000000011";
+    const testDomainInfoAddress1 = "0x0000000000000000000000000000000000000011";
     const testDomain = "aa.bb.example.com.au";
     const testDomainP1 = "bb.example.com.au";
     const testDomainP2 = "example.com.au";
@@ -104,7 +104,7 @@ contract('Resolver: Delegate', function(accounts) {
         await eraInterface1.addUpdateDomain(testDomainHashP3, eraAddress2, 0, domainOwner);
         await eraInterface2.addUpdateDomain(testDomainHashP2, eraAddress3, 0, domainOwner);
         await eraInterface3.addUpdateDomain(testDomainHashP1, eraAddress4, 0, domainOwner);
-        await eraInterface4.addUpdateDomain(testDomainHash, 0, testOrgInfoAddress1, domainOwner);
+        await eraInterface4.addUpdateDomain(testDomainHash, 0, testDomainInfoAddress1, domainOwner);
     }
 
     async function setupResolver() {
@@ -124,27 +124,27 @@ contract('Resolver: Delegate', function(accounts) {
 
 
     it("resolve based on aa.bb.example.com.au", async function() {
-        let resolvedOrgInfo = await resolverInterface.resolve.call(eraAddress4, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
-        assert.equal(testOrgInfoAddress1, resolvedOrgInfo);
-//        console.log("resolvedOrgInfo: " + resolvedOrgInfo);
+        let resolvedDomainInfo = await resolverInterface.resolve.call(eraAddress4, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
+        assert.equal(testDomainInfoAddress1, resolvedDomainInfo);
+//        console.log("resolvedDomainInfo: " + resolvedDomainInfo);
     });
 
     it("resolve based on bb.example.com.au", async function() {
-        let resolvedOrgInfo = await resolverInterface.resolve.call(eraAddress3, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
-        assert.equal(testOrgInfoAddress1, resolvedOrgInfo);
-//        console.log("resolvedOrgInfo: " + resolvedOrgInfo);
+        let resolvedDomainInfo = await resolverInterface.resolve.call(eraAddress3, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
+        assert.equal(testDomainInfoAddress1, resolvedDomainInfo);
+//        console.log("resolvedDomainInfo: " + resolvedDomainInfo);
     });
 
     it("resolve based on example.com.au", async function() {
-        let resolvedOrgInfo = await resolverInterface.resolve.call(eraAddress2, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
-        assert.equal(testOrgInfoAddress1, resolvedOrgInfo);
-//        console.log("resolvedOrgInfo: " + resolvedOrgInfo);
+        let resolvedDomainInfo = await resolverInterface.resolve.call(eraAddress2, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
+        assert.equal(testDomainInfoAddress1, resolvedDomainInfo);
+//        console.log("resolvedDomainInfo: " + resolvedDomainInfo);
     });
 
     it("resolve based on com.au", async function() {
-        let resolvedOrgInfo = await resolverInterface.resolve.call(eraAddress1, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
-        assert.equal(testOrgInfoAddress1, resolvedOrgInfo);
-//        console.log("resolvedOrgInfo: " + resolvedOrgInfo);
+        let resolvedDomainInfo = await resolverInterface.resolve.call(eraAddress1, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
+        assert.equal(testDomainInfoAddress1, resolvedDomainInfo);
+//        console.log("resolvedDomainInfo: " + resolvedDomainInfo);
     });
 
 });

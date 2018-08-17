@@ -25,7 +25,7 @@ contract('Resolver: Single Domain', function(accounts) {
     let common = require('./common');
 
     // For the purposes of this test, this can be a fake, non-zero address.
-    const testOrgInfoAddress1 = "0x0102030405060708090a1112131415161718191a";
+    const testDomainInfoAddress1 = "0x0102030405060708090a1112131415161718191a";
 
     let eraInterface;
     let resolverInterface;
@@ -49,7 +49,7 @@ contract('Resolver: Single Domain', function(accounts) {
             testDomainHashP3 = web3.utils.keccak256(common.TEST_DOMAIN_P3);
 
             const domainOwner = accounts[1];
-            await eraInterface.addUpdateDomain(testDomainHash, "0", testOrgInfoAddress1, domainOwner);
+            await eraInterface.addUpdateDomain(testDomainHash, "0", testDomainInfoAddress1, domainOwner);
         }
     });
 
@@ -59,10 +59,10 @@ contract('Resolver: Single Domain', function(accounts) {
 
 
     it("resolve", async function () {
-        let resolvedOrgInfo = await resolverInterface.resolve.call(
+        let resolvedDomainInfo = await resolverInterface.resolve.call(
             eraInterface.address, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
-        assert.equal(testOrgInfoAddress1, resolvedOrgInfo);
-//        console.log("resolvedOrgInfo: " + resolvedOrgInfo);
+        assert.equal(testDomainInfoAddress1, resolvedDomainInfo);
+//        console.log("resolvedDomainInfo: " + resolvedDomainInfo);
     });
 
 
@@ -70,10 +70,10 @@ contract('Resolver: Single Domain', function(accounts) {
         let eras = [];
         eras[0] = eraInterface.address;
 
-        let resolvedOrgInfo = await resolverInterface.resolve.call(
+        let resolvedDomainInfo = await resolverInterface.resolve.call(
             eras, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
-        assert.equal(testOrgInfoAddress1, resolvedOrgInfo);
-//        console.log("resolvedOrgInfo: " + resolvedOrgInfo);
+        assert.equal(testDomainInfoAddress1, resolvedDomainInfo);
+//        console.log("resolvedDomainInfo: " + resolvedDomainInfo);
     });
 
 
@@ -89,12 +89,12 @@ contract('Resolver: Single Domain', function(accounts) {
         let p3DomainHashes = [];
         p3DomainHashes[0] = testDomainHashP3;
 
-        let resolvedOrgInfos = await resolverInterface.resolveDomains.call(eras, domainHashes, p1DomainHashes, p2DomainHashes, p3DomainHashes);
-        assert.equal(testOrgInfoAddress1, resolvedOrgInfos[0]);
+        let resolvedDomainInfos = await resolverInterface.resolveDomains.call(eras, domainHashes, p1DomainHashes, p2DomainHashes, p3DomainHashes);
+        assert.equal(testDomainInfoAddress1, resolvedDomainInfos[0]);
 
 
-//        console.log("resolvedOrgInfos: " + resolvedOrgInfos);
-//        console.log("resolvedOrgInfos: " + resolvedOrgInfos.length);
+//        console.log("resolvedDomainInfos: " + resolvedDomainInfos);
+//        console.log("resolvedDomainInfos: " + resolvedDomainInfos.length);
     });
 
 

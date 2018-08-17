@@ -20,25 +20,20 @@ contract('ERA: Event Tests', function(accounts) {
     const domainOwner = accounts[1];
 
     // Used when assigning a domain to a dummy address.
-    const testAuthAddress1 = "0x0000000000000000000000000000000000000001";
-    const testOrgInfoAddress1 = "0x0000000000000000000000000000000000000011";
+    const testAuthAddress1 = "0x0000000000000000000000000000000000000021";
+    const testDomainInfoAddress1 = "0x0000000000000000000000000000000000000011";
     const testDomainHash1 = "0x101";
-
-
-
-    // Pass in a contract instance and expected value to retrieve the number of emitted events and run an assertion.
-    function assertDomainAddedEventNum(inContract, expected) {
-        inContract.DomainAddUpdate({}, {fromBlock: 0, toBlock: "latest"}).get((error,result) => (assert.equal(expected, result.length)));
-    }
 
 
     it("add one domain", async function() {
         let eraInterface = await common.getNewERA();
 
-        await eraInterface.addUpdateDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner);
+        // No events initially.
+        await common.assertDomainAddUpdateEventNum(eraInterface, 0);
 
-        const expected = 1;
-        eraInterface.DomainAddUpdate({}, {fromBlock: 0, toBlock: "latest"}).get((error,result) => (assert.equal(expected, result.length)));
+        await eraInterface.addUpdateDomain(testDomainHash1, testAuthAddress1, testDomainInfoAddress1, domainOwner);
 
+        // No events initially.
+        await common.assertDomainAddUpdateEventNum(eraInterface, 1);
     });
 });

@@ -18,13 +18,15 @@
  *
  * Note: transactions by default use account 0 in test rpc.
  */
+const ERAImplementation = artifacts.require("./ERA_v1.sol");
+
 contract('ERA: Permission Tests', function(accounts) {
     let common = require('./common');
 
-    const testAuthAddress1 = "0x0000000000000000000000000000000000000001";
-    const testAuthAddress2 = "0x0000000000000000000000000000000000000002";
-    const testOrgInfoAddress1 = "0x0000000000000000000000000000000000000011";
-    const testOrgInfoAddress2 = "0x0000000000000000000000000000000000000012";
+    const testAuthAddress1 = "0x0000000000000000000000000000000000000022";
+    const testAuthAddress2 = "0x0000000000000000000000000000000000000033";
+    const testDomainInfoAddress1 = "0x0000000000000000000000000000000000000011";
+    const testDomainInfoAddress2 = "0x0000000000000000000000000000000000000012";
     const testDomainHash1 = "0x101";
 
     // accounts[0], the default account for Truffle, is the ERA owner.
@@ -35,10 +37,11 @@ contract('ERA: Permission Tests', function(accounts) {
 
 
     it("change owner when not owner", async function() {
-        let eraInterface = await common.getNewERA();
+        // Can only change ownership on the implementation, not at the interface level.
+        let eraInstance = await ERAImplementation.new();
         let didNotTriggerError = false;
         try {
-            await eraInterface.transferOwnership(notEraOwner, {from: notEraOwner});
+            await eraInstance.transferOwnership(notEraOwner, {from: notEraOwner});
             didNotTriggerError = true;
         } catch(err) {
             // Expect that a revert will be called: see assert below.
@@ -51,7 +54,7 @@ contract('ERA: Permission Tests', function(accounts) {
         let eraInterface = await common.getNewERA();
         let didNotTriggerError = false;
         try {
-            await eraInterface.addUpdateDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner, {from: notEraOwner});
+            await eraInterface.addUpdateDomain(testDomainHash1, testAuthAddress1, testDomainInfoAddress1, domainOwner, {from: notEraOwner});
             didNotTriggerError = true;
         } catch(err) {
             // Expect that a revert will be called: see assert below.
@@ -63,7 +66,7 @@ contract('ERA: Permission Tests', function(accounts) {
     it("removeDomain when not owner", async function() {
         let eraInterface = await common.getNewERA();
         // Add the domain to be deleted.
-        await eraInterface.addUpdateDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner);
+        await eraInterface.addUpdateDomain(testDomainHash1, testAuthAddress1, testDomainInfoAddress1, domainOwner);
 
         let didNotTriggerError = false;
         try {

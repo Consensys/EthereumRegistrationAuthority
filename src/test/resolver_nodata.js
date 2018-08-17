@@ -32,7 +32,7 @@ const hexy = require("hexy");
 
 contract('Resolver: No Data Tests', function(accounts) {
     const zeroAddress = "0x0";
-    const testOrgInfoAddress1 = "0x0000000000000000000000000000000000000011";
+    const testDomainInfoAddress1 = "0x0000000000000000000000000000000000000011";
     const testDomain = "aa.bb.example.com.au";
     const testDomainP1 = "bb.example.com.au";
     const testDomainP2 = "example.com.au";
@@ -83,7 +83,7 @@ contract('Resolver: No Data Tests', function(accounts) {
         eraAddress = eraInstance.address;
         let eraInterface = await AbstractERA.at(eraAddress);
 
-        const resultAddDomain = await eraInterface.addUpdateDomain(testDomainHash, 0, testOrgInfoAddress1, domainOwner);
+        const resultAddDomain = await eraInterface.addUpdateDomain(testDomainHash, 0, testDomainInfoAddress1, domainOwner);
     }
 
     async function setupResolver() {
@@ -103,8 +103,8 @@ contract('Resolver: No Data Tests', function(accounts) {
 
     it("resolveDomain: zero length eraAddress array", async function() {
         let eras = [];
-        let resolvedOrgInfo = await resolverInterface.resolveDomain.call(eras, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
-        assert.equal(0, resolvedOrgInfo);
+        let resolvedDomainInfo = await resolverInterface.resolveDomain.call(eras, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
+        assert.equal(0, resolvedDomainInfo);
     });
 
 
@@ -121,8 +121,8 @@ contract('Resolver: No Data Tests', function(accounts) {
         let p3DomainHashes = [];
         p3DomainHashes[0] = testDomainHashP3;
 
-        let resolvedOrgInfos = await resolverInterface.resolveDomains.call(eras, domainHashes, p1DomainHashes, p2DomainHashes, p3DomainHashes);
-//        assert.equal(0, resolvedOrgInfos[0]);
+        let resolvedDomainInfos = await resolverInterface.resolveDomains.call(eras, domainHashes, p1DomainHashes, p2DomainHashes, p3DomainHashes);
+//        assert.equal(0, resolvedDomainInfos[0]);
     });
 
     it("resolveDomains: zero length domainHash array", async function() {
@@ -133,8 +133,8 @@ contract('Resolver: No Data Tests', function(accounts) {
         let p2DomainHashes = [];
         let p3DomainHashes = [];
 
-        let resolvedOrgInfos = await resolverInterface.resolveDomains.call(eras, domainHashes, p1DomainHashes, p2DomainHashes, p3DomainHashes);
-        assert.equal(0, resolvedOrgInfos[0]);
+        let resolvedDomainInfos = await resolverInterface.resolveDomains.call(eras, domainHashes, p1DomainHashes, p2DomainHashes, p3DomainHashes);
+        assert.equal(0, resolvedDomainInfos[0]);
     });
 
 

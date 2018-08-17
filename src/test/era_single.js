@@ -21,8 +21,8 @@ contract('ERA: Testing a single domain in an ERA', function(accounts) {
     const domainOwner = accounts[1];
 
 
-    const testAuthAddress1 = "0x0000000000000000000000000000000000000001";
-    const testOrgInfoAddress1 = "0x0000000000000000000000000000000000000011";
+    const testAuthAddress1 = "0x0000000000000000000000000000000000000021";
+    const testDomainInfoAddress1 = "0x0000000000000000000000000000000000000011";
 
 
     const testDomainHash1 = "0x101";
@@ -34,7 +34,7 @@ contract('ERA: Testing a single domain in an ERA', function(accounts) {
 
 
         //Note: transactions by default use account 0 in test rpc.
-        const resultAddDomain = await eraInterface.addUpdateDomain(testDomainHash1, testAuthAddress1, testOrgInfoAddress1, domainOwner);
+        const resultAddDomain = await eraInterface.addUpdateDomain(testDomainHash1, testAuthAddress1, testDomainInfoAddress1, domainOwner);
         //console.log("Transaction Hash");
         //console.log(resultAddDomain.tx);
         //console.log("Events");
@@ -53,9 +53,9 @@ contract('ERA: Testing a single domain in an ERA', function(accounts) {
         const authAddr1 = await eraInterface.getAuthority.call(testDomainHash1);
         assert.equal(authAddr1, testAuthAddress1, "Authority address");
 
-        const orgInfoAddr1 = await eraInterface.getOrgInfo.call(testDomainHash1);
-        assert.equal(testOrgInfoAddress1, orgInfoAddr1, "Org Info address");
-        //console.log("OrgInfo Address: ", orgInfoAddr1);
+        const domainInfoAddr1 = await eraInterface.getDomainInfo.call(testDomainHash1);
+        assert.equal(testDomainInfoAddress1, domainInfoAddr1, "Org Info address");
+        //console.log("DomainInfo Address: ", domainInfoAddr1);
     });
 
 });

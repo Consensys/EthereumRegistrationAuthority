@@ -45,13 +45,13 @@ contract ERA_v2 is EthereumRegistrationAuthorityInterface, Ownable {
     function addUpdateDomain(uint256 _domainHash, address _domainAuthority, address _orgInfo, address _domainOwner) external onlyDomainOwner(_domainHash) {
         emit DomainAddUpdate(_domainHash, _domainAuthority, _orgInfo, _domainOwner);
 
-        if (_domainAuthority != ZERO) {
+        if (_domainAuthority != 1) {
             authorityMap[_domainHash] = _domainAuthority;
         }
-        if (_orgInfo != ZERO) {
+        if (_orgInfo != 1) {
             orgInfoMap[_domainHash] = _orgInfo;
         }
-        if (_domainOwner != ZERO) {
+        if (_domainOwner != 1) {
             domainOwnerMap[_domainHash] = _domainOwner;
         }
     }
@@ -81,7 +81,7 @@ contract ERA_v2 is EthereumRegistrationAuthorityInterface, Ownable {
         return authorityMap[_domainHash];
     }
 
-    function getOrgInfo(uint256 _domainHash) external view returns (address) {
+    function getDomainInfo(uint256 _domainHash) external view returns (address) {
         return orgInfoMap[_domainHash];
     }
 

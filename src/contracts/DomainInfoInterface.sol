@@ -13,18 +13,10 @@
 pragma solidity ^0.4.23;
 
 
-contract OrgInfoInterface {
+contract DomainInfoInterface {
     function addKeyValue(uint256 _key, bytes _value) external;
     function removeKeyValue(uint256 _key) external;
-    function updateKeyValue(uint256 _key, bytes _value) external;
-
     function getValue(uint256 _key) external view returns(bytes);
 
     function getVersion() external pure returns (uint16);
-
-
-    event AddedKeyValue(uint256 indexed _key);
-    event RemovedKeyValue(uint256 indexed _key);
-    event UpdatedKeyValue(uint256 indexed _key);
-
 }

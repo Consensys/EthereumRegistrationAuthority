@@ -45,9 +45,9 @@ contract('ERA: Empty Tests', function(accounts) {
         assert.equal(authority, 0, "Unexpectedly, call getAuthority on a domain that doesn't exist didn't return 0");
     });
 
-    it("getOrgInfo", async function() {
+    it("getDomainInfo", async function() {
         let eraInterface = await common.getDeployedERA();
-        const orgInf = await eraInterface.getOrgInfo.call(testDomainHash1);
-        assert.equal(orgInf, 0, "Unexpectedly, call getOrgInfo on a domain that doesn't exist didn't return 0");
+        const orgInf = await eraInterface.getDomainInfo.call(testDomainHash1);
+        assert.equal(orgInf, 0, "Unexpectedly, call getDomainInfo on a domain that doesn't exist didn't return 0");
     });
 });

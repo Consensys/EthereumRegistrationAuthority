@@ -32,14 +32,14 @@ interface EthereumRegistrationAuthorityInterface {
      * @param _domainHash       Keccak256 message digest of a complete or partial domain name to add or update a record
      *                           for.
      * @param _domainAuthority  Contract to resolve sub-domains. Another copy of this contract.
-     *                           Set this parameter to 0x00 if the domain authority contract address should not be set
+     *                           Set this parameter to 0x01 if the domain authority contract address should not be set
      *                           or changed.
-     * @param _orgInfo          Contract which holds organisation information for the domain name identitied by
-     *                           _domainHash. Set this parameter to 0x00 if the organisation information contract
+     * @param _orgInfo          Contract which holds organisation information for the domain name identified by
+     *                           _domainHash. Set this parameter to 0x01 if the organisation information contract
      *                           address should not be set or update.
      * @param _domainOwner      Account entitled to update the _domainAuthority or the _orgInfo address for this domain
-     *                           hash. Set this parameter to 0x00 if the domain owner address should not be changed.
-     *                           Having this parameter 0x00 when setting a domain record for the first time indicates
+     *                           hash. Set this parameter to 0x01 if the domain owner address should not be changed.
+     *                           Having this parameter 0x01 when setting a domain record for the first time indicates
      *                           the Ethereum Registration Authority contract owner is the domain owner for this
      *                           domain record.
      */
@@ -62,7 +62,7 @@ interface EthereumRegistrationAuthorityInterface {
     function hasDomain(uint256 _domainHash) external view returns (bool);
     function getDomainOwner(uint256 _domainHash) external view returns (address);
     function getAuthority(uint256 _domainHash) external view returns (address);
-    function getOrgInfo(uint256 _domainHash) external view returns (address);
+    function getDomainInfo(uint256 _domainHash) external view returns (address);
 
 
     function getVersion() external pure returns (uint16);

@@ -54,7 +54,7 @@ contract Resolver_v1 is ResolverInterface {
     function resolveInternal(address _era, uint256 _domainHash, uint256 _p1DomainHash, uint256 _p2DomainHash, uint256 _p3DomainHash) private view returns(address) {
         EthereumRegistrationAuthorityInterface era = EthereumRegistrationAuthorityInterface(_era);
         if (era.hasDomain(_domainHash)) {
-            return era.getOrgInfo(_domainHash);
+            return era.getDomainInfo(_domainHash);
         }
 
         if (_p1DomainHash == 0) {
@@ -95,9 +95,9 @@ contract Resolver_v1 is ResolverInterface {
 
     function resolveDomainInternal(address[] _eras, uint256 _domainHash, uint256 _p1DomainHash, uint256 _p2DomainHash, uint256 _p3DomainHash) public view returns(address) {
         for (uint256 i = 0; i < _eras.length; i++) {
-            address orgInfoAddress = resolveInternal(_eras[i], _domainHash, _p1DomainHash, _p2DomainHash, _p3DomainHash);
-            if (orgInfoAddress != address(0)) {
-                return orgInfoAddress;
+            address domainInfoAddress = resolveInternal(_eras[i], _domainHash, _p1DomainHash, _p2DomainHash, _p3DomainHash);
+            if (domainInfoAddress != address(0)) {
+                return domainInfoAddress;
             }
         }
         return address(0);
