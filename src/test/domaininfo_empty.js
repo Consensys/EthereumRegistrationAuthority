@@ -26,30 +26,14 @@ contract('DomainInfo: Empty Tests', function(accounts) {
     const valueScnode1Enode = "enode://6f8a80d14311c39f35f516fa664deaaaa13e85b2f7493f37f6144d86991ec012937307647bd3b9a82abe2974e1407241d54947bbb39763a4cac9f77166ad92a0@10.3.58.6:30303?discport=30301";
 
 
-    it("removeKeyValue should not cause revert", async function () {
+    it("deleteValue should not cause revert", async function () {
         let domainInfoInterface = await common.getNewDomainInfo();
         let key = web3.utils.keccak256(keyScnode1Enode);
 
-        await domainInfoInterface.removeKeyValue(key);
+        await domainInfoInterface.deleteValue(key);
     });
 
 
-
-    it("updateKeyValue", async function () {
-        let domainInfoInterface = await common.getNewDomainInfo();
-        let key = web3.utils.keccak256(keyScnode1Enode);
-
-        let didNotTriggerError = false;
-        try {
-            await domainInfoInterface.updateKeyValue(key, valueScnode1Enode);
-            didNotTriggerError = true;
-        } catch (err) {
-            // Expect that a revert will be called as the key does not exist.
-            //console.log("ERROR! " + err.message);
-        }
-
-        assert.equal(didNotTriggerError, false, "Unexpectedly, transaction updateKeyValue on a key that doesn't exist didn't cause a revert to be called");
-    });
 
     it("getValue", async function () {
         let domainInfoInterface = await common.getNewDomainInfo();

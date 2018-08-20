@@ -17,19 +17,18 @@ import "./Ownable.sol";
 
 
 /**
-
-* Note: At present, no AddKeyValues is possible because the ABI doesn't support passing arrays of strings.
+* Simple implementation for storage of domain values.
 */
 contract DomainInfo_v1 is DomainInfoInterface, Ownable {
     uint16 constant private VERSION_ONE = 1;
 
     mapping(uint256=>bytes) private info;
 
-    function addKeyValue(uint256 _key, bytes _value) external onlyOwner {
+    function setValue(uint256 _key, bytes _value) external onlyOwner {
         info[_key] = _value;
     }
 
-    function removeKeyValue(uint256 _key) external onlyOwner {
+    function deleteValue(uint256 _key) external onlyOwner {
         delete info[_key];
     }
 

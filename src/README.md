@@ -1,31 +1,17 @@
 # Ethereum Registration Authority Code
 
 These directories contain the Ethereum Registration Authority 
-solidity code, test code, and eventually sample code.
-
-
-
+solidity code, test code, and sample code.
 
 The contracts are written in Solidity. The code is tested utilising the Truffle 
 framework.  For more information on installing and using Truffle, please 
 refer to: http://truffleframework.com/docs/getting_started/installation
 
-Current contract gas cost:
-addDomain 86475
-addDomainAuthorityOnly 71612
-addDomainOrgInfoOnly 71656
-removeDomain 19672
-changeAuthority 30431
-changeOrgInfo 30387
-changeOwner 30563
 
-TODO also install web3  hexy  sha3
-TODO work out what should be replaced.
-
-
-# Truffle Installation:
+# Install and dependancies:
 ```
 npm install -g truffle
+npm install web3
 ```
 
 # Running the tests:
@@ -60,6 +46,12 @@ test
 .exit
 ```
 
+## To run gas tests:
+```
+sh ./test_gas.sh
+
+```
+
 
 # Running the Truffle console logger
 Execute the following command in a separate window to your Truffle developer console:
@@ -67,8 +59,4 @@ Execute the following command in a separate window to your Truffle developer con
 truffle develop --log
 ```
 
-# Creating Tests:
-From the root directory of the Solidity project, run the following:
-```
-truffle create test *contractName*
-```
+

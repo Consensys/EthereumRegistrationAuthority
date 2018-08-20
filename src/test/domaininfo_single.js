@@ -33,7 +33,7 @@ contract('DomainInfo: Single Entry', function(accounts) {
     it("addKeyValue and getValue", async function () {
         let domainInfoInterface = await common.getNewDomainInfo();
         let key = web3.utils.keccak256(keyScnode1Enode);
-        await domainInfoInterface.addKeyValue(key, valueScnode1Enode);
+        await domainInfoInterface.setValue(key, valueScnode1Enode);
         let value = await domainInfoInterface.getValue.call(key);
         assert(value, valueScnode1Enode);
     });
@@ -41,8 +41,8 @@ contract('DomainInfo: Single Entry', function(accounts) {
     it("removeKeyValue", async function () {
         let domainInfoInterface = await common.getNewDomainInfo();
         let key = web3.utils.keccak256(keyScnode1Enode);
-        await domainInfoInterface.addKeyValue(key, valueScnode1Enode);
-        await domainInfoInterface.removeKeyValue(key);
+        await domainInfoInterface.setValue(key, valueScnode1Enode);
+        await domainInfoInterface.deleteValue(key);
         let value = await domainInfoInterface.getValue.call(key);
         assert(value, EMPTY);
     });
@@ -50,8 +50,8 @@ contract('DomainInfo: Single Entry', function(accounts) {
     it("update Key Value", async function () {
         let domainInfoInterface = await common.getNewDomainInfo();
         let key = web3.utils.keccak256(keyScnode1Enode);
-        await domainInfoInterface.addKeyValue(key, valueScnode1Enode);
-        await domainInfoInterface.addKeyValue(key, valueScnode1EnodeUpdated);
+        await domainInfoInterface.setValue(key, valueScnode1Enode);
+        await domainInfoInterface.setValue(key, valueScnode1EnodeUpdated);
         let value = domainInfoInterface.getValue(key);
         assert(value, valueScnode1EnodeUpdated);
     });
@@ -59,8 +59,8 @@ contract('DomainInfo: Single Entry', function(accounts) {
     it("add the same value twice should not cause a revert", async function () {
         let domainInfoInterface = await common.getNewDomainInfo();
         let key = web3.utils.keccak256(keyScnode1Enode);
-        await domainInfoInterface.addKeyValue(key, valueScnode1Enode);
+        await domainInfoInterface.setValue(key, valueScnode1Enode);
 
-        await domainInfoInterface.addKeyValue(key, valueScnode1Enode);
+        await domainInfoInterface.setValue(key, valueScnode1Enode);
     });
 });
