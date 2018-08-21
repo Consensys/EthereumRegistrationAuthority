@@ -14,14 +14,14 @@
  * This file contains code which is common to many of the test files.
  */
 
-const ResolverImplementation = artifacts.require("./Resolver_v1.sol");
+const FinderImplementation = artifacts.require("./Finder_v1.sol");
 const ERAImplementation = artifacts.require("./ERA_v1.sol");
 const ERAImplementation2 = artifacts.require("./ERA_v2.sol");
 const DomainInfoImplementation = artifacts.require("./DomainInfo_v1.sol");
 
 // All tests of the public API must be tested via the interface. This ensures all functions
 // which are assumed to be part of the public API actually are in the interface.
-const ResolverInterface = artifacts.require("./ResolverInterface.sol");
+const FinderInterface = artifacts.require("./FinderInterface.sol");
 const ERAInterface = artifacts.require("./EthereumRegistrationAuthorityInterface.sol");
 const DomainInfoInterface = artifacts.require("./DomainInfoInterface.sol");
 
@@ -30,6 +30,9 @@ const testDomain = "aa.bb.example.com.au";
 const testDomainP1 = "bb.example.com.au";
 const testDomainP2 = "example.com.au";
 const testDomainP3 = "com.au";
+
+const DONT_SET = "1";
+
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -41,6 +44,8 @@ module.exports = {
     TEST_DOMAIN_P1: testDomainP1,
     TEST_DOMAIN_P2: testDomainP2,
     TEST_DOMAIN_P3: testDomainP3,
+
+    DONT_SET: DONT_SET,
 
 
     getNewERA: async function() {
@@ -58,15 +63,15 @@ module.exports = {
         let eraAddress = eraInstance.address;
         return await ERAInterface.at(eraAddress);
     },
-    getNewResolver: async function() {
-        let resolverInstance = await ResolverImplementation.new();
-        let resolverAddress = resolverInstance.address;
-        return await ResolverInterface.at(resolverAddress);
+    getNewFinder: async function() {
+        let finderInstance = await FinderImplementation.new();
+        let finderAddress = finderInstance.address;
+        return await FinderInterface.at(finderAddress);
     },
     getDeployedResolver: async function() {
-        let resolverInstance = await ResolverImplementation.deployed();
-        let resolverAddress = resolverInstance.address;
-        return await ResolverInterface.at(resolverAddress);
+        let finderInstance = await FinderImplementation.deployed();
+        let finderAddress = finderInstance.address;
+        return await FinderInterface.at(finderAddress);
     },
 
     getNewDomainInfo: async function() {

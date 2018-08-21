@@ -19,45 +19,53 @@ pragma solidity ^0.4.23;
  * contracts for a list of domains. Doing this search on-chain should mean significantly
  * fewer JSON RPC calls.
  */
-contract ResolverInterface {
+contract FinderInterface {
     uint constant public NUMBER_OF_ADDRESSES = 10;
 
     /**
-    * Resolve the address of the OrgInfo contract for a domain, given a ERAs.
+    * Resolve the address of the DomainInfo contract for a domain, given an ERA.
     *
-    * @param _era          List of ERAs to search for domain and parent domains.
+    * @param _era           A root ERA to search for the domain and parent domains.
     * @param _domainHash    Domain hash of the domain to search for. For example: abc.def.pegasys.tech
-    * @param _p1DomainHash  Domain hash of the parent domain to search for. For example: def.pegasys.tech
-    * @param _p2DomainHash  Domain hash of the grant parent domain to search for. For example: pegasys.tech
-    * @param _p3DomainHash  Domain hash of the great grand parent domain to search for. For example: tech
-    * @return Address of the OrgInfo contract. Zero is returned if the domain record can not be found.
+    * @param _p1DomainHash  If the domain corresponding to _domainHash can't be found in the ERAs, the domain hash
+    *                        of the parent domain to search for. For example: def.pegasys.tech
+    * @param _p2DomainHash  If the domain corresponding to _domainHash and _p1DomainHash can't be found in the ERAs,
+    *                        the domain hash of the grant parent domain to search for. For example: pegasys.tech
+    * @param _p3DomainHash  If the domain corresponding to _domainHash, _p1DomainHash and  _p2DomainHash can't
+    *                        be found in the ERAs, the domain hash of the great grand parent domain to search for.
+    *                        For example: tech
+    * @return Address of the DomainInfo contract, or zero if the address can not be found.
     */
     function resolve(address _era, uint256 _domainHash, uint256 _p1DomainHash, uint256 _p2DomainHash, uint256 _p3DomainHash) external view returns(address);
 
 
 
     /**
-    * Resolve the address of the OrgInfo contract for a domain, given a list of ERAs.
+    * Resolve the address of the DomainInfo contract for a domain, given a list of ERAs.
     *
     * @param _eras          List of ERAs to search for domain and parent domains.
     * @param _domainHash    Domain hash of the domain to search for. For example: abc.def.pegasys.tech
-    * @param _p1DomainHash  Domain hash of the parent domain to search for. For example: def.pegasys.tech
-    * @param _p2DomainHash  Domain hash of the grant parent domain to search for. For example: pegasys.tech
-    * @param _p3DomainHash  Domain hash of the great grand parent domain to search for. For example: tech
-    * @return Address of the OrgInfo contract. Zero is returned if the domain record can not be found.
+    * @param _p1DomainHash  If the domain corresponding to _domainHash can't be found in the ERAs, the domain hash
+    *                        of the parent domain to search for. For example: def.pegasys.tech
+    * @param _p2DomainHash  If the domain corresponding to _domainHash and _p1DomainHash can't be found in the ERAs,
+    *                        the domain hash of the grant parent domain to search for. For example: pegasys.tech
+    * @param _p3DomainHash  If the domain corresponding to _domainHash, _p1DomainHash and  _p2DomainHash can't
+    *                        be found in the ERAs, the domain hash of the great grand parent domain to search for.
+    *                        For example: tech
+    * @return Address of the DomainInfo contract, or zero if the address can not be found.
     */
     function resolveDomain(address[] _eras, uint256 _domainHash, uint256 _p1DomainHash, uint256 _p2DomainHash, uint256 _p3DomainHash) external view returns(address);
 
 
     /**
-    * Resolve the addresses of the OrgInfo contracts for a set of domains, given a list of ERAs.
+    * Resolve the addresses of the DomainInfo contracts for a set of domains, given a list of ERAs.
     *
     * @param _eras          List of ERAs to search for domain and parent domains.
     * @param _domainHashes    Domain hashes of the domains to search for. For example: abc.def.pegasys.tech
     * @param _p1DomainHashes  Domain hashes of the parent domains to search for. For example: def.pegasys.tech
     * @param _p2DomainHashes  Domain hashes of the grant parent domains to search for. For example: pegasys.tech
     * @param _p3DomainHashes  Domain hashes of the great grand parent domains to search for. For example: tech
-    * @return Addresses of the OrgInfo contract. Zero is returned for a domain if the domain record can not be found.
+    * @return Addresses of the DomainInfo contract. Zero is returned for a domain if the domain record can not be found.
     * NOTE: Solidity doesn't allow functions to return variable amounts of data. As such, an array
     * of 10 addresses is returned. If less than 10 domains are requested, then the array is zero filled.
     */

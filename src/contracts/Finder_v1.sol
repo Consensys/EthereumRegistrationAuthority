@@ -12,14 +12,14 @@
  */
 pragma solidity ^0.4.18;
 
-import "./ResolverInterface.sol";
+import "./FinderInterface.sol";
 import "./EthereumRegistrationAuthorityInterface.sol";
 
 
 /**
-* Resolve the OrgInfo contracts for the domains.
+* Resolve the DomainInfo contracts for the domains.
 */
-contract Resolver_v1 is ResolverInterface {
+contract Finder_v1 is FinderInterface {
     uint16 constant public VERSION_ONE = 1;
 
 

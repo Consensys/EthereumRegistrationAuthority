@@ -57,47 +57,6 @@ contract('gas test', function(accounts) {
         console.log("gas: removeDomain (not existing): " + result.receipt.gasUsed);
 
         await common.dumpAllDomainAddUpdateEvents(eraInterface);
-
-//
-//         console.log("ContractAddress                                 Event           BlkNum DomainHash                 AuthorityAddress             OrgAddress                OwnerAddress");
-//         var domainsAddedEvents = await eraInterface.DomainAddUpdate({}, {fromBlock: 0, toBlock: "latest"}).get(function(error, result){
-// //        await domainsAddedEvents.get(function(error, result){
-//             if (error) {
-//                 console.log(error);
-//                 throw error;
-//
-//             }
-//             if (result.length == 0) {
-//                 console.log("No events recorded");
-//             } else {
-//                 var i;
-//                 for (i = 0; i < result.length; i++) {
-//                     console.log(
-//                         result[i].address + " \t" +
-//                         result[i].event + " \t" +
-//                         result[i].blockNumber + " \t" +
-//                         result[i].args._domainHash + " \t" +
-//                         result[i].args._domainAuthority + " \t" +
-//                         result[i].args._orgInfo + " \t" +
-//                         result[i].args._owner + " \t"
-// //                result.blockHash + "    " +
-// //                result.logIndex + " " +
-// //                result.transactionHash + "  " +
-// //                result.transactionIndex
-//                     );
-//
-//                 }
-//             }
-//
-//
-//
-//         });
-//
-//         // Do something here. It seems to force the test system to wait around long enough for the previous
-//         // event dump to happen.
-//         result = await eraInterface.removeDomain(testDomainHash1);
-
-
     }
 
 

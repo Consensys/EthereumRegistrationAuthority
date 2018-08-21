@@ -11,18 +11,18 @@
  * specific language governing permissions and limitations under the License.
  */
 /**
- * Resolver_v1.sol tests with either no ERAs or no domains.
+ * Finder_v1.sol tests with either no ERAs or no domains.
  *
  * The tests in this file check the behaviour of the Resolver contract when not enough
  * information is supplied: either there are no ERAs to search in, or there are no domains
  * to search for.
  */
-const Resolver = artifacts.require("./Resolver_v1.sol");
+const Resolver = artifacts.require("./Finder_v1.sol");
 const ERA = artifacts.require("./ERA_v1.sol");
 
 // All tests of the public API must be tested via the interface. This ensures all functions
 // which are assumed to be part of the public API actually are in the interface.
-const AbstractResolver = artifacts.require("./ResolverInterface.sol");
+const AbstractResolver = artifacts.require("./FinderInterface.sol");
 const AbstractERA = artifacts.require("./EthereumRegistrationAuthorityInterface.sol");
 
 

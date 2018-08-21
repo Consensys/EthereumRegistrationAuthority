@@ -13,7 +13,7 @@
 pragma solidity ^0.4.23;
 
 import "./EthereumRegistrationAuthorityInterface.sol";
-import "./ownable.sol";
+import "./Ownable.sol";
 
 /**
  * Implementation of Ethereum Registration Authority.

@@ -23,13 +23,13 @@
  *
  *
  */
-const Resolver = artifacts.require("./Resolver_v1.sol");
+const Resolver = artifacts.require("./Finder_v1.sol");
 const ERA = artifacts.require("./ERA_v1.sol");
 const DomainInfo = artifacts.require("./DomainInfo_v1.sol");
 
 // All tests of the public API must be tested via the interface. This ensures all functions
 // which are assumed to be part of the public API actually are in the interface.
-const AbstractResolver = artifacts.require("./ResolverInterface.sol");
+const AbstractResolver = artifacts.require("./FinderInterface.sol");
 const AbstractERA = artifacts.require("./EthereumRegistrationAuthorityInterface.sol");
 const AbstractDomainInfo = artifacts.require("./DomainInfoInterface.sol");
 

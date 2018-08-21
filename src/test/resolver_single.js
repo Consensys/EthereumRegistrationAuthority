@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License.
  */
 /**
- * Resolver_v1.sol tests with either a single ERA with a single domains.
+ * Finder_v1.sol tests with either a single ERA with a single domains.
  *
  * The tests in this file check the behaviour of the Resolver contract in the simplest
  * circumstance:
@@ -27,6 +27,8 @@ contract('Resolver: Single Domain', function(accounts) {
     // For the purposes of this test, this can be a fake, non-zero address.
     const testDomainInfoAddress1 = "0x0102030405060708090a1112131415161718191a";
 
+    const DONT_SET = "1";
+
     let eraInterface;
     let resolverInterface;
 
@@ -41,7 +43,7 @@ contract('Resolver: Single Domain', function(accounts) {
         // Only run this before the first test method is executed.
         if (common.testDomainHash == null) {
             eraInterface = await common.getNewERA();
-            resolverInterface = await common.getNewResolver();
+            resolverInterface = await common.getNewFinder();
 
             testDomainHash = web3.utils.keccak256(common.TEST_DOMAIN);
             testDomainHashP1 = web3.utils.keccak256(common.TEST_DOMAIN_P1);
@@ -49,7 +51,7 @@ contract('Resolver: Single Domain', function(accounts) {
             testDomainHashP3 = web3.utils.keccak256(common.TEST_DOMAIN_P3);
 
             const domainOwner = accounts[1];
-            await eraInterface.addUpdateDomain(testDomainHash, "0", testDomainInfoAddress1, domainOwner);
+            await eraInterface.addUpdateDomain(testDomainHash, DONT_SET, testDomainInfoAddress1, domainOwner);
         }
     });
 

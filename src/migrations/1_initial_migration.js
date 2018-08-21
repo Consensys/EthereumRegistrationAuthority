@@ -14,7 +14,7 @@ var Migrations = artifacts.require("./Migrations.sol");
 var ERA = artifacts.require("./ERA_v1.sol");
 var ERAv2 = artifacts.require("./ERA_v2.sol");
 var OrgInfo = artifacts.require("./DomainInfo_v1.sol");
-var Resolver = artifacts.require("./Resolver_v1.sol");
+var Resolver = artifacts.require("./Finder_v1.sol");
 
 
 
