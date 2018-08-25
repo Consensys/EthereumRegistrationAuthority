@@ -1,15 +1,24 @@
-/**
- * ERA_v1.sol tests which analyse gas usage.
+/*
+ * Copyright 2018 ConsenSys AG.
  *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Note: transactions by default use account 0 in test rpc.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
-
+/**
+ * Tests which analyse gas usage of the Ethereum Registration Authority contract.
+ *
+ */
 const ERAImplementation = artifacts.require("./ERA_v1.sol");
 const ERAImplementation2 = artifacts.require("./ERA_v2.sol");
 
-contract('gas test', function(accounts) {
+
+contract('ERA gas test', function(accounts) {
     let common = require('../test/common');
 
     const DONT_SET = "1";
@@ -63,7 +72,7 @@ contract('gas test', function(accounts) {
 
 
 
-    it("gas test v1", async function() {
+    it("gas test ERA v1", async function() {
         let eraInstance = await ERAImplementation.new();
         let receipt = await web3.eth.getTransactionReceipt(eraInstance.transactionHash);
         console.log("gas: contract deploy: " + receipt.gasUsed);
@@ -72,7 +81,7 @@ contract('gas test', function(accounts) {
         await tests(eraInterface);
     });
 
-    it("gas test v2", async function() {
+    it("gas test ERA v2", async function() {
         let eraInstance = await ERAImplementation2.new();
         let receipt = await web3.eth.getTransactionReceipt(eraInstance.transactionHash);
         console.log("gas: contract deploy: " + receipt.gasUsed);
@@ -80,4 +89,6 @@ contract('gas test', function(accounts) {
         let eraInterface = await common.getNewERAv2();
         await tests(eraInterface);
     });
+
+
 });
