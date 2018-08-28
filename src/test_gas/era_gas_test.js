@@ -15,23 +15,19 @@
  *
  * The following is the gas usage shown when the tests are run:
  *
- * gas: contract deploy: 961758
- * gas: add domain: 87663
- * gas: add domain (same domain): 42419
- * gas: add domain (same domain): 42419
- * gas: add domain (none): 25104
- * gas: add domain (none): 25104
- * gas: add domain (none): 25104
- * gas: add domain (auth): 30449
- * gas: add domain (auth): 30449
- * gas: add domain (auth): 30449
- * gas: add domain (org): 30513
- * gas: add domain (org): 30513
- * gas: add domain (domain): 31665
- * gas: add domain (domain): 31665
- * gas: removeDomain (existing): 20099
- * gas: removeDomain (not existing): 24237
- * gas: removeDomain (not existing): 24237
+ gas: contract deploy: 961758
+ add domain (auth, domainInfo, domainOwner) First Write: 87663
+ add domain (auth, domainInfo, domainOwner) Subsequent Writes: 42419
+ add domain (none) First Write: 25348
+ add domain (none) Subsequent Writes: 25348
+ add domain (auth) First Write: 45693
+ add domain (auth) Subsequent Writes: 30693
+ add domain (domainInfo) First Write: 45757
+ add domain (domainInfo) Subsequent Writes: 30757
+ add domain (domainOwner) First Write: 46909
+ add domain (domainOwner) Subsequent Writes: 31665
+ removeDomain (when domain in use): 20099
+ removeDomain (when domain not in use): 24237
  */
 const ERAImplementation = artifacts.require("./ERA_v1.sol");
 const ERAImplementation2 = artifacts.require("./ERA_v2.sol");
