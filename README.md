@@ -20,7 +20,7 @@ they need.
 The diagram below shows an example of contracts used in the Ethereum Registration 
 Authority system.
 
-![alt text](diagram-architecture1.png "Architecture")
+![alt text](era-arch1.png "Architecture")
 
 In the example, there are two root registration authorities, **A** and **B**. Root ERA **A** 
 has an entry for example.com. Example.com is also listed in root ERA **B**. As such, applications
@@ -43,6 +43,16 @@ Doing this would allow control of the sub-domains to be handled by a different g
 supply.com, such as a separate business unit. Both sub-domains a1.aa.supply.com and a2.aa.supply.com
 use the same DomainInfo contract to store their domain information. 
 
+Edu.au could map to a government department of education that operates a 
+Delegate ERA. Each university, for example University of Queensland would 
+operate their own Delegate ERA, for example uq.edu.au. The university could 
+delegate the configuration of the Domain Information contracts to the 
+departments within the university. As such, the administrators responsible 
+for the domain itee.uq.edu.au would operate their own DomainInfo 
+contract.
+
+An application could use the Finder contract (not shown in the example) to resolve
+domain names to determine the DomainInfo contract to use for each domain.
 
 ## Expected Usage
 The initial usage is envisaged as to be used for bootstrapping sidechains for use in permissioned 
