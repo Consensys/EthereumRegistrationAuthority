@@ -24,10 +24,6 @@ contract Finder_v1 is FinderInterface {
 
 
 
-    function resolve(address _era, uint256 _domainHash, uint256 _p1DomainHash, uint256 _p2DomainHash, uint256 _p3DomainHash) external view returns(address) {
-        return resolveInternal(_era, _domainHash, _p1DomainHash, _p2DomainHash, _p3DomainHash);
-    }
-
     function resolveDomain(address[] _eras, uint256 _domainHash, uint256 _p1DomainHash, uint256 _p2DomainHash, uint256 _p3DomainHash) external view returns(address) {
         return resolveDomainInternal(_eras, _domainHash, _p1DomainHash, _p2DomainHash, _p3DomainHash);
     }

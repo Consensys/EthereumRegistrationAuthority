@@ -68,7 +68,7 @@ module.exports = {
         let finderAddress = finderInstance.address;
         return await FinderInterface.at(finderAddress);
     },
-    getDeployedResolver: async function() {
+    getDeployedFinder: async function() {
         let finderInstance = await FinderImplementation.deployed();
         let finderAddress = finderInstance.address;
         return await FinderInterface.at(finderAddress);

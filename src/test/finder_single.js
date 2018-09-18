@@ -11,9 +11,9 @@
  * specific language governing permissions and limitations under the License.
  */
 /**
- * Finder_v1.sol tests with either a single ERA with a single domains.
+ * Finder_v1.sol tests with either a single ERA with a single domain.
  *
- * The tests in this file check the behaviour of the Resolver contract in the simplest
+ * The tests in this file check the behaviour of the Finder contract in the simplest
  * circumstance:
  * There is a single ERA
  * The domain hash of the domain is in the ERA.
@@ -21,16 +21,14 @@
 var Web3 = require('web3');
 var web3 = new Web3();
 
-contract('Resolver: Single Domain', function(accounts) {
+contract('Finder: Single Domain', function(accounts) {
     let common = require('./common');
 
     // For the purposes of this test, this can be a fake, non-zero address.
     const testDomainInfoAddress1 = "0x0102030405060708090a1112131415161718191a";
 
-    const DONT_SET = "1";
-
     let eraInterface;
-    let resolverInterface;
+    let finderInterface;
 
 
     let testDomainHash;
@@ -41,9 +39,9 @@ contract('Resolver: Single Domain', function(accounts) {
 
     beforeEach(async function () {
         // Only run this before the first test method is executed.
-        if (common.testDomainHash == null) {
-            eraInterface = await common.getNewERA();
-            resolverInterface = await common.getNewFinder();
+        if (testDomainHash == null) {
+            eraInterface = await common.getDeployedERA();
+            finderInterface = await common.getDeployedFinder();
 
             testDomainHash = web3.utils.keccak256(common.TEST_DOMAIN);
             testDomainHashP1 = web3.utils.keccak256(common.TEST_DOMAIN_P1);
@@ -51,28 +49,17 @@ contract('Resolver: Single Domain', function(accounts) {
             testDomainHashP3 = web3.utils.keccak256(common.TEST_DOMAIN_P3);
 
             const domainOwner = accounts[1];
-            await eraInterface.addUpdateDomain(testDomainHash, DONT_SET, testDomainInfoAddress1, domainOwner);
+            await eraInterface.addUpdateDomain(testDomainHash, common.DONT_SET, testDomainInfoAddress1, domainOwner);
         }
     });
 
-
-    it("resolve1", async function () {
-    });
-
-
-    it("resolve", async function () {
-        let resolvedDomainInfo = await resolverInterface.resolve.call(
-            eraInterface.address, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
-        assert.equal(testDomainInfoAddress1, resolvedDomainInfo);
-//        console.log("resolvedDomainInfo: " + resolvedDomainInfo);
-    });
 
 
     it("resolveDomain", async function () {
         let eras = [];
         eras[0] = eraInterface.address;
 
-        let resolvedDomainInfo = await resolverInterface.resolve.call(
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(
             eras, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
         assert.equal(testDomainInfoAddress1, resolvedDomainInfo);
 //        console.log("resolvedDomainInfo: " + resolvedDomainInfo);
@@ -91,7 +78,7 @@ contract('Resolver: Single Domain', function(accounts) {
         let p3DomainHashes = [];
         p3DomainHashes[0] = testDomainHashP3;
 
-        let resolvedDomainInfos = await resolverInterface.resolveDomains.call(eras, domainHashes, p1DomainHashes, p2DomainHashes, p3DomainHashes);
+        let resolvedDomainInfos = await finderInterface.resolveDomains.call(eras, domainHashes, p1DomainHashes, p2DomainHashes, p3DomainHashes);
         assert.equal(testDomainInfoAddress1, resolvedDomainInfos[0]);
 
 

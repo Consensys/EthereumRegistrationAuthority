@@ -92,22 +92,30 @@ contract('Finder: Delegate', function(accounts) {
 
 
     it("resolve based on an ERA which contains aa.bb.example.com.au", async function() {
-        let resolvedDomainInfo = await finderInterface.resolve.call(eraAddress4, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
+        let eras = [];
+        eras[0] = eraAddress4;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
         assert.equal(testDomainInfoAddress1, resolvedDomainInfo);
     });
 
     it("resolve based on an ERA which contains bb.example.com.au", async function() {
-        let resolvedDomainInfo = await finderInterface.resolve.call(eraAddress3, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
+        let eras = [];
+        eras[0] = eraAddress3;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
         assert.equal(testDomainInfoAddress1, resolvedDomainInfo);
     });
 
     it("resolve based on an ERA which contains example.com.au", async function() {
-        let resolvedDomainInfo = await finderInterface.resolve.call(eraAddress2, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
+        let eras = [];
+        eras[0] = eraAddress2;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
         assert.equal(testDomainInfoAddress1, resolvedDomainInfo);
     });
 
     it("resolve based on an ERA which contains com.au", async function() {
-        let resolvedDomainInfo = await finderInterface.resolve.call(eraAddress1, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
+        let eras = [];
+        eras[0] = eraAddress1;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, testDomainHash, testDomainHashP1, testDomainHashP2, testDomainHashP3);
         assert.equal(testDomainInfoAddress1, resolvedDomainInfo);
     });
 

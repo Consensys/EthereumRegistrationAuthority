@@ -22,23 +22,6 @@ pragma solidity ^0.4.23;
 contract FinderInterface {
     uint constant public NUMBER_OF_ADDRESSES = 10;
 
-    /**
-    * Resolve the address of the DomainInfo contract for a domain, given an ERA.
-    *
-    * @param _era           A root ERA to search for the domain and parent domains.
-    * @param _domainHash    Domain hash of the domain to search for. For example: abc.def.pegasys.tech
-    * @param _p1DomainHash  If the domain corresponding to _domainHash can't be found in the ERAs, the domain hash
-    *                        of the parent domain to search for. For example: def.pegasys.tech
-    * @param _p2DomainHash  If the domain corresponding to _domainHash and _p1DomainHash can't be found in the ERAs,
-    *                        the domain hash of the grant parent domain to search for. For example: pegasys.tech
-    * @param _p3DomainHash  If the domain corresponding to _domainHash, _p1DomainHash and  _p2DomainHash can't
-    *                        be found in the ERAs, the domain hash of the great grand parent domain to search for.
-    *                        For example: tech
-    * @return Address of the DomainInfo contract, or zero if the address can not be found.
-    */
-    function resolve(address _era, uint256 _domainHash, uint256 _p1DomainHash, uint256 _p2DomainHash, uint256 _p3DomainHash) external view returns(address);
-
-
 
     /**
     * Resolve the address of the DomainInfo contract for a domain, given a list of ERAs.
