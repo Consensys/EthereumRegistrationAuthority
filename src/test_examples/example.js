@@ -172,18 +172,29 @@ contract('Example', function(accounts) {
     }
 
 
+    // Set-up and deploy all of the contracts for edu.au and sub-domains.
+    // Various owner accounts are used, depending on the level of the hierarchy.
+    async function setupAndDeployEduAuAndSubdomains() {
+        // Deploy the contracts.
+        delegateEraEduAu = await getNewERAFromAddress(ownerEduAu);
+        delegateEraUqEduAu = await getNewERAFromAddress(ownerUqEduAu);
+        domainInfoIteeUqEduAu = await getNewDomainInfoFromAddress(ownerIteeUqEduAu);
 
-    /*    async function deployContracts() {
+        // Add domains to the delegate ERA.
+        // uq.edu.au: There is a delegate ERA for sub-domains.
+        await delegateEraEduAu.addUpdateDomain(domainHashUqEduAu, delegateEraUqEduAu.address, common.DONT_SET, ownerUqEduAu, {from: ownerEduAu});
+        // itee.uq.edu.au: There is no delegate ERA for sub-domains.
+        await delegateEraUqEduAu.addUpdateDomain(domainHashIteeUqEduAu, common.DONT_SET, domainInfoIteeUqEduAu.address, ownerIteeUqEduAu, {from: ownerUqEduAu});
+        // edu.au: Is listed in Root ERA B.
+        await rootEraB.addUpdateDomain(domainHashEduAu, delegateEraEduAu.address, common.DONT_SET, ownerEduAu, {from: ownerRootEraB});
 
-            delegateEraSupplyCom = await common.getNewERA(ownerSupplyCom);
-            delegateEraEduAu = await common.getNewERA(ownerEduAu);
-            delegateEraUqEduAu = await common.getNewERA(ownerUqEduAu);
+        // Add some information to the domain info contracts.
+        await domainInfoIteeUqEduAu.setValue(allDomainsEmailAddressKeyHash, "admin@itee.uq.edu.au", {from: ownerIteeUqEduAu});
+        await domainInfoIteeUqEduAu.setValue(allDomainsEnodeKeyHash, "enode://10318a80d14311c39f35f516fa664deaaaa13e85b2f7493f37f6144d86991ec012937307647bd3b9a82abe2974e1407241d54947bbb39763a4cac9f77166ad92a0@10.3.58.6:30303?discport=30301", {from: ownerIteeUqEduAu});
+    }
 
-            domainInfoAaSupplyCom = await common.getNewDomainInfo(ownerSupplyCom);
-            domainInfoIteeUqEduAu = await common.getNewDomainInfo(ownerIteeUqEduAu);
 
-        }
-    */
+
 
 
 
@@ -196,6 +207,7 @@ contract('Example', function(accounts) {
             await setupAndDeployExampleComAndSubdomains();
             await setupAndDeployBankCoUk();
             await setupAndDeploySupplyComAndSubdomains();
+            await setupAndDeployEduAuAndSubdomains();
         }
     });
 
@@ -320,8 +332,38 @@ contract('Example', function(accounts) {
     });
 
 
+    it("find itee.uq.edu.au using Root ERA B", async function() {
+        let eras = [];
+        eras[0] = rootEraB.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashIteeUqEduAu, domainHashUqEduAu, domainHashEduAu, 0);
+        assert.equal(domainInfoIteeUqEduAu.address, resolvedDomainInfo);
+    });
 
 
+    it("find itee.uq.edu.au and bank.co.uk using Root ERA B", async function() {
+        let eras = [];
+        eras[0] = rootEraB.address;
+
+        let domainHashes = [];
+        domainHashes[0] = domainHashIteeUqEduAu;
+        domainHashes[1] = domainHashBankCoUk;
+
+        let parentHashes = [];
+        parentHashes[0] = domainHashUqEduAu;
+        parentHashes[1] = 0;
+
+        let grandParentHashes = [];
+        grandParentHashes[0] = domainHashEduAu;
+        grandParentHashes[1] = 0;
+
+        let greatGrandParentHashes = [];
+        greatGrandParentHashes[0] = 0;
+        greatGrandParentHashes[1] = 0;
+
+        let resolvedDomainInfos = await finderInterface.resolveDomains.call(eras, domainHashes, parentHashes, grandParentHashes, greatGrandParentHashes);
+        assert.equal(domainInfoIteeUqEduAu.address, resolvedDomainInfos[0]);
+        assert.equal(domainInfoBankCoUk.address, resolvedDomainInfos[1]);
+    });
 
 
 });
