@@ -106,12 +106,8 @@ contract('Example', function(accounts) {
         finderInterface = await common.getDeployedFinder();
     }
 
-    /**
-     * Set-up and deploy all of the contracts for example.com and sub-domains.
-     * The account ownerExampleCom is used to deploy all contracts.
-     *
-     * @returns {Promise<void>}
-     */
+    // Set-up and deploy all of the contracts for example.com and sub-domains.
+    // The account ownerExampleCom is used to deploy all contracts.
     async function setupAndDeployExampleComAndSubdomains() {
         // Deploy the contracts.
         delegateEraExampleCom = await getNewERAFromAddress(ownerExampleCom);
@@ -135,13 +131,27 @@ contract('Example', function(accounts) {
     }
 
 
+    // Set-up and deploy all of the contracts for example.com and sub-domains.
+    // The account ownerBankCoUk is used to deploy all contracts.
+    async function setupAndDeployBankCoUk() {
+        // Deploy the contracts.
+        domainInfoBankCoUk = await getNewDomainInfoFromAddress(ownerBankCoUk);
+
+        // List domain in root ERA B.
+        await rootEraB.addUpdateDomain(domainHashBankCoUk, common.DONT_SET, domainInfoBankCoUk.address, ownerBankCoUk, {from: ownerRootEraB});
+
+        // Add some information to the domain info contract.
+        await domainInfoBankCoUk.setValue(allDomainsEmailAddressKeyHash, "admin@bank.co.uk", {from: ownerBankCoUk});
+        await domainInfoBankCoUk.setValue(allDomainsEnodeKeyHash, "enode://10118a80d14311c39f35f516fa664deaaaa13e85b2f7493f37f6144d86991ec012937307647bd3b9a82abe2974e1407241d54947bbb39763a4cac9f77166ad92a0@10.3.58.6:30303?discport=30301", {from: ownerBankCoUk});
+    }
+
+
 /*    async function deployContracts() {
 
         delegateEraSupplyCom = await common.getNewERA(ownerSupplyCom);
         delegateEraEduAu = await common.getNewERA(ownerEduAu);
         delegateEraUqEduAu = await common.getNewERA(ownerUqEduAu);
 
-        domainInfoBankCoUk = await common.getNewDomainInfo(ownerBankCoUk);
         domainInfoAaSupplyCom = await common.getNewDomainInfo(ownerSupplyCom);
         domainInfoIteeUqEduAu = await common.getNewDomainInfo(ownerIteeUqEduAu);
 
@@ -157,6 +167,7 @@ contract('Example', function(accounts) {
             await deployRootEraB();
             await deployFinder();
             await setupAndDeployExampleComAndSubdomains();
+            await setupAndDeployBankCoUk();
         }
     });
 
@@ -244,6 +255,20 @@ contract('Example', function(accounts) {
         eras[0] = rootEraB.address;
         let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashS2ExampleCom, 0, 0, 0);
         assert.equal(0, resolvedDomainInfo);
+    });
+
+
+    it("dont find bank.co.uk using Root ERA A", async function() {
+        let eras = [];
+        eras[0] = rootEraA.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashBankCoUk, 0, 0, 0);
+        assert.equal(0, resolvedDomainInfo);
+    });
+    it("find bank.co.uk using Root ERA B", async function() {
+        let eras = [];
+        eras[0] = rootEraB.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashBankCoUk, 0, 0, 0);
+        assert.equal(domainInfoBankCoUk.address, resolvedDomainInfo);
     });
 
 
