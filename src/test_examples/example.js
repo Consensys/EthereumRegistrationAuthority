@@ -168,11 +168,85 @@ contract('Example', function(accounts) {
     it("find s1.example.com using Root ERA A", async function() {
         let eras = [];
         eras[0] = rootEraA.address;
-
         let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashS1ExampleCom, domainHashExampleCom, 0, 0);
         assert.equal(domainInfoS1ExampleCom.address, resolvedDomainInfo);
-//        console.log("resolvedDomainInfo: " + resolvedDomainInfo);
     });
+    it("find s1.example.com using Root ERA B", async function() {
+        let eras = [];
+        eras[0] = rootEraB.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashS1ExampleCom, domainHashExampleCom, 0, 0);
+        assert.equal(domainInfoS1ExampleCom.address, resolvedDomainInfo);
+    });
+    it("find s1.example.com using example.com ERA with both domain hash and parent domain hash", async function() {
+        let eras = [];
+        eras[0] = delegateEraExampleCom.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashS1ExampleCom, domainHashExampleCom, 0, 0);
+        assert.equal(domainInfoS1ExampleCom.address, resolvedDomainInfo);
+    });
+    it("find s1.example.com using example.com ERA with just domain hash", async function() {
+        let eras = [];
+        eras[0] = delegateEraExampleCom.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashS1ExampleCom, 0, 0, 0);
+        assert.equal(domainInfoS1ExampleCom.address, resolvedDomainInfo);
+    });
+    it("dont find s1.example.com using Root ERA A when no parent domain is specified", async function() {
+        let eras = [];
+        eras[0] = rootEraA.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashS1ExampleCom, 0, 0, 0);
+        assert.equal(0, resolvedDomainInfo);
+    });
+    it("dont find s1.example.com using Root ERA B when no parent domain is specified", async function() {
+        let eras = [];
+        eras[0] = rootEraB.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashS1ExampleCom, 0, 0, 0);
+        assert.equal(0, resolvedDomainInfo);
+    });
+    it("dont find s1.example.com using example.com ERA with just parent domain hash", async function() {
+        let eras = [];
+        eras[0] = delegateEraExampleCom.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashExampleCom, 0, 0, 0);
+        assert.equal(0, resolvedDomainInfo);
+    });
+
+
+    it("find s2.example.com using Root ERA A", async function() {
+        let eras = [];
+        eras[0] = rootEraA.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashS2ExampleCom, domainHashExampleCom, 0, 0);
+        assert.equal(domainInfoS2ExampleCom.address, resolvedDomainInfo);
+    });
+    it("find s2.example.com using Root ERA B", async function() {
+        let eras = [];
+        eras[0] = rootEraB.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashS2ExampleCom, domainHashExampleCom, 0, 0);
+        assert.equal(domainInfoS2ExampleCom.address, resolvedDomainInfo);
+    });
+    it("find s2.example.com using example.com ERA with both domain hash and parent domain hash", async function() {
+        let eras = [];
+        eras[0] = delegateEraExampleCom.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashS2ExampleCom, domainHashExampleCom, 0, 0);
+        assert.equal(domainInfoS2ExampleCom.address, resolvedDomainInfo);
+    });
+    it("find s2.example.com using example.com ERA with just domain hash", async function() {
+        let eras = [];
+        eras[0] = delegateEraExampleCom.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashS2ExampleCom, 0, 0, 0);
+        assert.equal(domainInfoS2ExampleCom.address, resolvedDomainInfo);
+    });
+    it("dont find s2.example.com using Root ERA A when no parent domain is specified", async function() {
+        let eras = [];
+        eras[0] = rootEraA.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashS2ExampleCom, 0, 0, 0);
+        assert.equal(0, resolvedDomainInfo);
+    });
+    it("dont find s2.example.com using Root ERA B when no parent domain is specified", async function() {
+        let eras = [];
+        eras[0] = rootEraB.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashS2ExampleCom, 0, 0, 0);
+        assert.equal(0, resolvedDomainInfo);
+    });
+
+
 
 });
 
