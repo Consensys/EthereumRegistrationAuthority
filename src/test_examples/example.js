@@ -64,6 +64,8 @@ contract('Example', function(accounts) {
     // For all domains in the Domain Info contract, email address of owner of domains.
     let allDomainsEmailAddressKeyHash  = web3.utils.keccak256("*:tech.pegasys.contact.email");
     let allDomainsEnodeKeyHash  = web3.utils.keccak256("*:ef.enode");
+    let a1AaSuplyComEnodeKeyHash  = web3.utils.keccak256("a1.aa.supply.com:ef.enode");
+    let a2AaSuplyComEnodeKeyHash  = web3.utils.keccak256("a2.aa.supply.com:ef.enode");
 
 
     let ownerRootEraA = accounts[1];
@@ -146,17 +148,42 @@ contract('Example', function(accounts) {
     }
 
 
-/*    async function deployContracts() {
+    // Set-up and deploy all of the contracts for supply.com and sub-domains.
+    // The account ownerSupplyCom is used to deploy all contracts.
+    async function setupAndDeploySupplyComAndSubdomains() {
+        // Deploy the contracts.
+        delegateEraSupplyCom = await getNewERAFromAddress(ownerSupplyCom);
+        domainInfoAaSupplyCom = await getNewDomainInfoFromAddress(ownerSupplyCom);
 
-        delegateEraSupplyCom = await common.getNewERA(ownerSupplyCom);
-        delegateEraEduAu = await common.getNewERA(ownerEduAu);
-        delegateEraUqEduAu = await common.getNewERA(ownerUqEduAu);
+        // Add domains to the delegate ERA.
+        // aa.supply.com: There is a delegate ERA for sub-domains. The owner of the sub-domain is the same as the ERA owner.
+        await delegateEraSupplyCom.addUpdateDomain(domainHashAaSupplyCom, delegateEraSupplyCom.address, common.DONT_SET, common.DONT_SET, {from: ownerSupplyCom});
+        // a1.aa.supply.com: There is no delegate ERA for sub-domains. The owner of the sub-domain is the same as the ERA owner.
+        await delegateEraSupplyCom.addUpdateDomain(domainHashA1AaSupplyCom, common.DONT_SET, domainInfoAaSupplyCom.address, common.DONT_SET, {from: ownerSupplyCom});
+        // a2.aa.supply.com: There is no delegate ERA for sub-domains. The owner of the sub-domain is the same as the ERA owner.
+        await delegateEraSupplyCom.addUpdateDomain(domainHashA2AaSupplyCom, common.DONT_SET, domainInfoAaSupplyCom.address, common.DONT_SET, {from: ownerSupplyCom});
+        // supply.com: Is listed in Root ERA B. There is no domain info contract for supply.com.
+        await rootEraB.addUpdateDomain(domainHashSupplyCom, delegateEraSupplyCom.address, common.DONT_SET, ownerSupplyCom, {from: ownerRootEraB});
 
-        domainInfoAaSupplyCom = await common.getNewDomainInfo(ownerSupplyCom);
-        domainInfoIteeUqEduAu = await common.getNewDomainInfo(ownerIteeUqEduAu);
-
+        // Add some information to the domain info contracts.
+        await domainInfoAaSupplyCom.setValue(allDomainsEmailAddressKeyHash, "admin@supply.com", {from: ownerSupplyCom});
+        await domainInfoAaSupplyCom.setValue(a1AaSuplyComEnodeKeyHash, "enode://10218a80d14311c39f35f516fa664deaaaa13e85b2f7493f37f6144d86991ec012937307647bd3b9a82abe2974e1407241d54947bbb39763a4cac9f77166ad92a0@10.3.58.6:30303?discport=30301", {from: ownerSupplyCom});
+        await domainInfoAaSupplyCom.setValue(a2AaSuplyComEnodeKeyHash, "enode://10228a80d14311c39f35f516fa664deaaaa13e85b2f7493f37f6144d86991ec012937307647bd3b9a82abe2974e1407241d54947bbb39763a4cac9f77166ad92a0@10.3.58.6:30303?discport=30301", {from: ownerSupplyCom});
     }
-*/
+
+
+
+    /*    async function deployContracts() {
+
+            delegateEraSupplyCom = await common.getNewERA(ownerSupplyCom);
+            delegateEraEduAu = await common.getNewERA(ownerEduAu);
+            delegateEraUqEduAu = await common.getNewERA(ownerUqEduAu);
+
+            domainInfoAaSupplyCom = await common.getNewDomainInfo(ownerSupplyCom);
+            domainInfoIteeUqEduAu = await common.getNewDomainInfo(ownerIteeUqEduAu);
+
+        }
+    */
 
 
 
@@ -168,6 +195,7 @@ contract('Example', function(accounts) {
             await deployFinder();
             await setupAndDeployExampleComAndSubdomains();
             await setupAndDeployBankCoUk();
+            await setupAndDeploySupplyComAndSubdomains();
         }
     });
 
@@ -270,6 +298,29 @@ contract('Example', function(accounts) {
         let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashBankCoUk, 0, 0, 0);
         assert.equal(domainInfoBankCoUk.address, resolvedDomainInfo);
     });
+
+
+    it("dont find supply.com using Root ERA B - no domain info", async function() {
+        let eras = [];
+        eras[0] = rootEraB.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashSupplyCom, 0, 0, 0);
+        assert.equal(0, resolvedDomainInfo);
+    });
+    it("dont find aa.supply.com using Root ERA B - no domain info", async function() {
+        let eras = [];
+        eras[0] = rootEraB.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashAaSupplyCom, domainHashSupplyCom, 0, 0);
+        assert.equal(0, resolvedDomainInfo);
+    });
+    it("find a1.aa.supply.com using Root ERA B", async function() {
+        let eras = [];
+        eras[0] = rootEraB.address;
+        let resolvedDomainInfo = await finderInterface.resolveDomain.call(eras, domainHashA1AaSupplyCom, domainHashAaSupplyCom, domainHashSupplyCom, 0);
+        assert.equal(domainInfoAaSupplyCom.address, resolvedDomainInfo);
+    });
+
+
+
 
 
 
