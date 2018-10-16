@@ -365,6 +365,32 @@ contract('Example', function(accounts) {
         assert.equal(domainInfoBankCoUk.address, resolvedDomainInfos[1]);
     });
 
+    it("find itee.uq.edu.au and bank.co.uk using Root ERA A and B", async function() {
+        let eras = [];
+        eras[0] = rootEraA.address;
+        eras[1] = rootEraB.address;
+
+        let domainHashes = [];
+        domainHashes[0] = domainHashIteeUqEduAu;
+        domainHashes[1] = domainHashBankCoUk;
+
+        let parentHashes = [];
+        parentHashes[0] = domainHashUqEduAu;
+        parentHashes[1] = 0;
+
+        let grandParentHashes = [];
+        grandParentHashes[0] = domainHashEduAu;
+        grandParentHashes[1] = 0;
+
+        let greatGrandParentHashes = [];
+        greatGrandParentHashes[0] = 0;
+        greatGrandParentHashes[1] = 0;
+
+        let resolvedDomainInfos = await finderInterface.resolveDomains.call(eras, domainHashes, parentHashes, grandParentHashes, greatGrandParentHashes);
+        assert.equal(domainInfoIteeUqEduAu.address, resolvedDomainInfos[0]);
+        assert.equal(domainInfoBankCoUk.address, resolvedDomainInfos[1]);
+    });
+
 
 });
 
