@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tech.pegasys.era.iml" filepath="$PROJECT_DIR$/.idea/modules/tech.pegasys.era.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tech.pegasys.era_main.iml" filepath="$PROJECT_DIR$/.idea/modules/tech.pegasys.era_main.iml" group="tech.pegasys.era" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tech.pegasys.era_test.iml" filepath="$PROJECT_DIR$/.idea/modules/tech.pegasys.era_test.iml" group="tech.pegasys.era" />
+    </modules>
+  </component>
+</project>
