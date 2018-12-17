@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-pragma solidity ^0.4.18;
+pragma solidity ^0.5.0;
 
 import "./FinderInterface.sol";
 import "./EthereumRegistrationAuthorityInterface.sol";
@@ -24,11 +24,11 @@ contract Finder_v1 is FinderInterface {
 
 
 
-    function resolveDomain(address[] _eras, uint256 _domainHash, uint256 _p1DomainHash, uint256 _p2DomainHash, uint256 _p3DomainHash) external view returns(address) {
+    function resolveDomain(address[] calldata _eras, uint256 _domainHash, uint256 _p1DomainHash, uint256 _p2DomainHash, uint256 _p3DomainHash) external view returns(address) {
         return resolveDomainInternal(_eras, _domainHash, _p1DomainHash, _p2DomainHash, _p3DomainHash);
     }
 
-    function resolveDomains(address[] _eras, uint256[] _domainHashes, uint256[] _p1DomainHashes, uint256[] _p2DomainHashes, uint256[] _p3DomainHashes) external view returns(address[NUMBER_OF_ADDRESSES]) {
+    function resolveDomains(address[] calldata _eras, uint256[] calldata _domainHashes, uint256[] calldata _p1DomainHashes, uint256[] calldata _p2DomainHashes, uint256[] calldata _p3DomainHashes) external view returns(address[NUMBER_OF_ADDRESSES] memory) {
         // Only fixed length arrays can be returned from Solidity code. As such, limit the number of domains that are searched for.
         require(_domainHashes.length < NUMBER_OF_ADDRESSES);
 
@@ -60,7 +60,7 @@ contract Finder_v1 is FinderInterface {
             address era1Address = era.getAuthority(_p1DomainHash);
             if (era1Address != address(0)) {
                 EthereumRegistrationAuthorityInterface era1 = EthereumRegistrationAuthorityInterface(era1Address);
-                return resolveInternal(era1, _domainHash, 0, 0, 0);
+                return resolveInternal(address(era1), _domainHash, 0, 0, 0);
             }
         }
 
@@ -71,7 +71,7 @@ contract Finder_v1 is FinderInterface {
             address era2Address = era.getAuthority(_p2DomainHash);
             if (era2Address != address(0)) {
                 EthereumRegistrationAuthorityInterface era2 = EthereumRegistrationAuthorityInterface(era2Address);
-                return resolveInternal(era2, _domainHash, _p1DomainHash, 0, 0);
+                return resolveInternal(address(era2), _domainHash, _p1DomainHash, 0, 0);
             }
         }
 
@@ -82,14 +82,14 @@ contract Finder_v1 is FinderInterface {
             address era3Address = era.getAuthority(_p3DomainHash);
             if (era3Address != address(0)) {
                 EthereumRegistrationAuthorityInterface era3 = EthereumRegistrationAuthorityInterface(era3Address);
-                return resolveInternal(era3, _domainHash, _p1DomainHash, _p2DomainHash, 0);
+                return resolveInternal(address(era3), _domainHash, _p1DomainHash, _p2DomainHash, 0);
             }
         }
         return address(0);
     }
 
 
-    function resolveDomainInternal(address[] _eras, uint256 _domainHash, uint256 _p1DomainHash, uint256 _p2DomainHash, uint256 _p3DomainHash) public view returns(address) {
+    function resolveDomainInternal(address[] memory _eras, uint256 _domainHash, uint256 _p1DomainHash, uint256 _p2DomainHash, uint256 _p3DomainHash) public view returns(address) {
         for (uint256 i = 0; i < _eras.length; i++) {
             address domainInfoAddress = resolveInternal(_eras[i], _domainHash, _p1DomainHash, _p2DomainHash, _p3DomainHash);
             if (domainInfoAddress != address(0)) {

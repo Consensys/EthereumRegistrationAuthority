@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-pragma solidity ^0.4.23;
+pragma solidity ^0.5.0;
 
 /**
  * Interface for Ethereum Registration Authority Resolver.
@@ -37,7 +37,7 @@ contract FinderInterface {
     *                        For example: tech
     * @return Address of the DomainInfo contract, or zero if the address can not be found.
     */
-    function resolveDomain(address[] _eras, uint256 _domainHash, uint256 _p1DomainHash, uint256 _p2DomainHash, uint256 _p3DomainHash) external view returns(address);
+    function resolveDomain(address[] calldata _eras, uint256 _domainHash, uint256 _p1DomainHash, uint256 _p2DomainHash, uint256 _p3DomainHash) external view returns(address);
 
 
     /**
@@ -52,7 +52,7 @@ contract FinderInterface {
     * NOTE: Solidity doesn't allow functions to return variable amounts of data. As such, an array
     * of 10 addresses is returned. If less than 10 domains are requested, then the array is zero filled.
     */
-    function resolveDomains(address[] _eras, uint256[] _domainHashes, uint256[] _p1DomainHashes, uint256[] _p2DomainHashes, uint256[] _p3DomainHashes) external view returns(address[NUMBER_OF_ADDRESSES]);
+    function resolveDomains(address[] calldata _eras, uint256[] calldata _domainHashes, uint256[] calldata _p1DomainHashes, uint256[] calldata _p2DomainHashes, uint256[] calldata _p3DomainHashes) external view returns(address[NUMBER_OF_ADDRESSES] memory);
 
     function getVersion() external pure returns (uint16);
 }

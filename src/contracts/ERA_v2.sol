@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-pragma solidity ^0.4.23;
+pragma solidity ^0.5.0;
 
 import "./EthereumRegistrationAuthorityInterface.sol";
 import "./Ownable.sol";
@@ -25,12 +25,12 @@ contract ERA_v2 is EthereumRegistrationAuthorityInterface, Ownable {
 
     // Zero is the default value when a storage location has not been set. It is used to indicate that a value
     // has not been set in a storage location.
-    address constant private STORAGE_LOCATION_NOT_SET = 0;
+    address constant private STORAGE_LOCATION_NOT_SET = address(0);
 
     // One is used to indicate that a location should not be set in the add or update function. Not having this
     // equal to the value used when a location is not set means that a value can be set to 0 indicating it is not
     // in use.
-    address constant private DO_NOT_CHANGE = 1;
+    address constant private DO_NOT_CHANGE = address(1);
 
     // Maps of Keccak256(domain name) to records.
     // Having separate maps is slightly more gas efficient than having a map with a record containing the three values.

@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-pragma solidity ^0.4.23;
+pragma solidity ^0.5.0;
 
 /**
 * Domain Information contracts hold information pertaining to one or more domains. The information is stored as key
@@ -51,9 +51,9 @@ contract DomainInfoInterface {
     *
     * @param _key  A key which should conform to the format described above.
     */
-    function setValue(uint256 _key, bytes _value) external;
+    function setValue(uint256 _key, bytes calldata _value) external;
     function deleteValue(uint256 _key) external;
-    function getValue(uint256 _key) external view returns(bytes);
+    function getValue(uint256 _key) external view returns(bytes memory);
 
     function getVersion() external pure returns (uint16);
 }

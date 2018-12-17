@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-pragma solidity ^0.4.23;
+pragma solidity ^0.5.0;
 
 import "./DomainInfoInterface.sol";
 import "./Ownable.sol";
@@ -24,7 +24,7 @@ contract DomainInfo_v1 is DomainInfoInterface, Ownable {
 
     mapping(uint256=>bytes) private info;
 
-    function setValue(uint256 _key, bytes _value) external onlyOwner {
+    function setValue(uint256 _key, bytes calldata _value) external onlyOwner {
         info[_key] = _value;
     }
 
@@ -32,7 +32,7 @@ contract DomainInfo_v1 is DomainInfoInterface, Ownable {
         delete info[_key];
     }
 
-    function getValue(uint256 _key) external view returns(bytes){
+    function getValue(uint256 _key) external view returns(bytes memory){
         return info[_key];
     }
 
