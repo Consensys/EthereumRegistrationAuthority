@@ -10,10 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package eraviewer;
+package tech.pegasys.era.eraviewer;
 
-import era.EthereumRegistrationAuthority;
-import era.EthereumRegistrationAuthorityFactory;
+import tech.pegasys.era.EraUtils;
+import tech.pegasys.era.EthereumRegistrationAuthority;
+import tech.pegasys.era.EthereumRegistrationAuthorityFactory;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 

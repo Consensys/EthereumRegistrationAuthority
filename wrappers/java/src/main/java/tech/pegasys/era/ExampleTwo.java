@@ -19,7 +19,7 @@ public class ExampleTwo {
 
         EthereumRegistrationAuthorityFactory eraFactory = new EthereumRegistrationAuthorityFactory(web3j, credentials);
         System.out.println("Load Finder...");
-        Finder finder = eraFactory.finderAtAddress(finderAddress);
+        Finder finder = eraFactory.finderAtAddressRead(finderAddress);
         List<String> eraList = new ArrayList<>();
         eraList.add(topEraContractAddress);
         System.out.println("Find Domain Info...");
@@ -30,7 +30,7 @@ public class ExampleTwo {
                 "com");
         System.out.println("DomainInfo address at: " + domainInfoAddress);
         System.out.println("Load domainInfo...");
-        DomainInfo domainInfo = eraFactory.domainInfoAtAddress(domainInfoAddress);
+        DomainInfo domainInfo = eraFactory.domainInfoAtAddressRead(domainInfoAddress);
         String data = new String(domainInfo.getValue("enode"), "UTF-8");    //Get enode address
         System.out.println("Data stored is: " + data);
     }
