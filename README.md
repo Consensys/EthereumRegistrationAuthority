@@ -90,39 +90,70 @@ The following information is stored for each domain entry:
 * DomainInfo: Address of DomainInfo contract if such a contract exists for the domain.
 * Domain Owner: The owner of the domain entry.
 
+
 ### Domain Info Interface
-The DomainInfo contract holds a map of key - value pairs. Keys are the message digest of the 
-raw key. Raw keys are the domain names they pertain to followed by the key type.
-That is:
+The DomainInfo contract holds a map of key - value pairs. Keys are generated from Raw Keys via `keccak256` algorithm.
+Depending on API layer, Keys or Raw Keys are used in the API to set and retrieve values. Keys and Raw Keys are
+case sensitive.
 
-    ```keccak256(domain name, ":", key type)```
-    
-The domain name is the full domain name ("a2.aa.supply.com") or the special wild 
-card domain ("*"). Keys which use the wild card provide default values for all domains in this Domain 
-Information contract.
+As a guideline, we recommend that Raw Keys are structured as follows:
 
-The key type is either a value defined below or a user defined values. To avoid name collision, 
-user defined keys should be prefixed using reverse domain name ordering for the domain which 
-creates the key.
+```<DOMAIN-IDENTIFIER>/<DATA-TYPE>```
 
-|Defined Keys              | Expected Value and Value Format                                                  |
+where `DOMAIN-IDENTIFIER` identifies the domain to which the information pertains to and `DATA-TYPE` identifies
+the type of information stored.
+
+
+#### DOMAIN-IDENTIFIER
+
+Special wild card character `*` can be used as a catch all for default values in the entire DomainInfo contract.
+
+Example of DOMAIN-IDENTIFIER could be
+ - `node.sidechain.example.com` to represent a side chain node.
+
+
+#### DATA-TYPE
+
+`DATA-TYPE` indicates the type of information stored in a value. Reserved DATA-TYPEs
+are described below. Custom DATA-TYPEs can also be used. We suggest adhering to the guidelines described below.
+
+Reserved DATA-TYPEs follow the following format:
+
+```<RESERVED-TYPE-CATEGORY>:<RESERVED-TYPE-CLARIFIER>```
+
+Following categories are available:
+1. DNS keys - modeled after the
+[Domain Name System record types](https://en.wikipedia.org/wiki/List_of_DNS_record_types)
+2. EF keys - keys specific to Ethereum Foundation
+
+Complete list of reserved DATA-TYPEs:
+
+| Reserved DATA-TYPE       | Expected Value and Value Format                                                  |
 | ------------------------ | -------------------------------------------------------------------------------- |
-| dns.a                    | IPv4 address as described in RFC 1035: https://tools.ietf.org/html/rfc1035       |
-| dns.aaaa                 | IPv6 address as described in RFC 3596: https://tools.ietf.org/html/rfc3596       |
-| dns.txt                  | Text strings as described in RFC 1035: https://tools.ietf.org/html/rfc1035       |
-| ef.enode                 | Enode address in ASCII as described here: https://github.com/ethereum/wiki/wiki/enode-url-format |
-| tech.pegasys.sc.enc      | Public encryption key / key agreement key for the Enterprise Ethereum node.      |
-| tech.pegasys.sc.size     | The maximum number of nodes in a sidechain cluster. Domain names for the cluster are expected to be named sc0.domain to sc(size-1).domain. |
-| tech.pegasys.contact.email | Email address to use to contact the owner of the domain.                       |
+| dns:a                    | IPv4 address as described in RFC 1035: https://tools.ietf.org/html/rfc1035       |
+| dns:aaaa                 | IPv6 address as described in RFC 3596: https://tools.ietf.org/html/rfc3596       |
+| dns:txt                  | Text strings as described in RFC 1035: https://tools.ietf.org/html/rfc1035       |
 
-The table below shows the example keys.
+User defined keys follow following format:
 
-| Example Key                                                 | Description       |
-| ----------------------------------------------------------- | -------------------------------------- |
-| keccak256(pegasys.tech:dns.a)                               |The IPv4 address for pegasys.tech.
-| keccak256(*.sidechain.pegasys.tech:tech.pegasys.sc.size)    |The maximum number of nodes in the sidechain cluster for sidechain.pegasys.tech.
-| keccak256(sc3.sidechain.pegasys.tech:ef.enode)              |The enode address of node sc3.sidechain.pegasys.tech.
-| keccak256(*:tech.pegasys.contact.email)                     |The email address to be used to contact the owner of the DomainInfo instance.
+```<USER-DOMAIN>:<CUSTOM-TYPE-CLARIFIER>```
+
+where REVERSE-DOMAIN is the reverse domain name ordering for the domain which creates the key and CUSTOM-TYPE-CLARIFIER
+is a custom identifier string.
+
+Examples of custom DATA-TYPEs:
+
+| User Defined Keys          | Expected Value and Value Format                                                  |
+| -------------------------- | -------------------------------------------------------------------------------- |
+| sc.pegasys.tech:enc        | Public encryption key / key agreement key for the Enterprise Ethereum node.      |
+| contact.pegasys.tech:email | Email address to use to contact the owner of the domain.                         |
+
+Examples of Raw Keys:
+
+| Example Raw Kes                    | Description                            |
+| ---------------------------------- | -------------------------------------- |
+| pegasys.tech/dns:a                 | The IPv4 address for pegasys.tech.     |
+| */tech.pegasys.contact:email       | The email address to be used to contact the owner of the DomainInfo instance. |
 
 
 ### Finder
