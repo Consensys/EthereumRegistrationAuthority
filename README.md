@@ -93,7 +93,7 @@ The following information is stored for each domain entry:
 
 ### Domain Info Interface
 The DomainInfo contract holds a map of key - value pairs. Keys are generated from Raw Keys via `keccak256` algorithm.
-Depending on API layer, Keys or Raw Keys are used in the API to set and retreive values. Keys and Raw Keys are
+Depending on API layer, Keys or Raw Keys are used in the API to set and retrieve values. Keys and Raw Keys are
 case sensitive.
 
 As a guideline, we recommend that Raw Keys are structured as follows:
