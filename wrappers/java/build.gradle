@@ -4,6 +4,11 @@ plugins {
 
 version '1.0-SNAPSHOT'
 
+apply plugin: 'java'
+apply plugin: 'application'
+mainClassName = 'tech.pegasys.era.tools.EraViewer'
+mainClassName = 'tech.pegasys.era.tools.EraDeploy'
+mainClassName = 'tech.pegasys.era.tools.EraNetworkConfig'
 sourceCompatibility = 1.8
 
 // build extra start script for EraViewer
@@ -25,7 +30,7 @@ task buildEraDeployScript(type: CreateStartScripts) {
 }
 
 // build extra start script for EraNetworkConfig
-task buildEraViewerScript(type: CreateStartScripts) {
+task buildEraNetworkConfigScript(type: CreateStartScripts) {
     description "Creates OS specific scripts to call the 'other' entry point"
     classpath = startScripts.classpath
     outputDir = startScripts.outputDir
