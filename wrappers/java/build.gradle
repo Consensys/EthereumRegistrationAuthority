@@ -1,15 +1,13 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 version '1.0-SNAPSHOT'
 
-apply plugin: 'java'
-apply plugin: 'application'
-mainClassName = 'tech.pegasys.era.tools.EraViewer'
-mainClassName = 'tech.pegasys.era.tools.EraDeploy'
-mainClassName = 'tech.pegasys.era.tools.EraNetworkConfig'
 sourceCompatibility = 1.8
+
+mainClassName = ''
 
 // build extra start script for EraViewer
 task buildEraViewerScript(type: CreateStartScripts) {
