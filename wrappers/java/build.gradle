@@ -36,6 +36,22 @@ task buildEraNetworkConfigScript(type: CreateStartScripts) {
     applicationName = 'eraNetworkConfig'
 }
 
+// build start scripts
+// Note: This causes double overwrite during unzip of poc.zip and -o option is
+//       therefore required. This approach is temporary and good enough for now.
+distZip {
+    baseName = archivesBaseName
+    //include our extra start scripts
+    into("${baseName}/bin") {
+        from buildEraViewerScript
+        fileMode = 0755
+        from buildEraDeployScript
+        fileMode = 0755
+        from buildEraNetworkConfigScript
+        fileMode = 0755
+    }
+}
+
 repositories {
     mavenCentral()
 }
