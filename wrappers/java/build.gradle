@@ -1,13 +1,11 @@
-plugins {
-    id 'java'
-    id 'application'
-}
+apply plugin: 'java'
+apply plugin: 'application'
 
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
-mainClassName = ''
+mainClassName = 'tech.pegasys.era.tools.EraNetworkConfig'
 
 // build extra start script for EraViewer
 task buildEraViewerScript(type: CreateStartScripts) {
@@ -27,15 +25,6 @@ task buildEraDeployScript(type: CreateStartScripts) {
     applicationName = 'eradeploy'
 }
 
-// build extra start script for EraNetworkConfig
-task buildEraNetworkConfigScript(type: CreateStartScripts) {
-    description "Creates OS specific scripts to call the 'other' entry point"
-    classpath = startScripts.classpath
-    outputDir = startScripts.outputDir
-    mainClassName = 'tech.pegasys.era.tools.EraNetworkConfig'
-    applicationName = 'eraNetworkConfig'
-}
-
 // build start scripts
 // Note: This causes double overwrite during unzip of poc.zip and -o option is
 //       therefore required. This approach is temporary and good enough for now.
@@ -46,8 +35,6 @@ distZip {
         from buildEraViewerScript
         fileMode = 0755
         from buildEraDeployScript
-        fileMode = 0755
-        from buildEraNetworkConfigScript
         fileMode = 0755
     }
 }
