@@ -1,24 +1,26 @@
-apply plugin: 'java'
-apply plugin: 'application'
+plugins {
+    id 'java'
+    id 'application'
+}
 
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
-mainClassName = 'tech.pegasys.era.tools.EraNetworkConfig'
+mainClassName = 'tech.pegasys.era.tools.EraViewer'
 
-// build extra start script for EraViewer
-task buildEraViewerScript(type: CreateStartScripts) {
-    description "Creates OS specific scripts to call the 'other' entry point"
+// build extra start script for EraNetworkConfig
+task buildEraNetworkConfigScript(type: CreateStartScripts) {
+    description "Creates EraNetWorkConfig script"
     classpath = startScripts.classpath
     outputDir = startScripts.outputDir
-    mainClassName = 'tech.pegasys.era.tools.EraViewer'
-    applicationName = 'eraviewer'
+    mainClassName = 'tech.pegasys.era.tools.EraNetworkConfig'
+    applicationName = 'eranetworkconfig'
 }
 
 // build extra start script for EraDeploy
 task buildEraDeployScript(type: CreateStartScripts) {
-    description "Creates OS specific scripts to call the 'other' entry point"
+    description "Creates EraDeploy script"
     classpath = startScripts.classpath
     outputDir = startScripts.outputDir
     mainClassName = 'tech.pegasys.era.tools.EraDeploy'
@@ -32,7 +34,7 @@ distZip {
     baseName = archivesBaseName
     //include our extra start scripts
     into("${baseName}/bin") {
-        from buildEraViewerScript
+        from buildEraNetworkConfigScript
         fileMode = 0755
         from buildEraDeployScript
         fileMode = 0755
