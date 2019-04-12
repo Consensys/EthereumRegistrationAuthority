@@ -9,6 +9,15 @@ sourceCompatibility = 1.8
 
 mainClassName = 'tech.pegasys.era.tools.EraViewer'
 
+// build extra start script for EraViewer
+task buildEraViewerScript(type: CreateStartScripts) {
+    description "Creates EraViewer script"
+    classpath = startScripts.classpath
+    outputDir = startScripts.outputDir
+    mainClassName = 'tech.pegasys.era.tools.EraViewer'
+    applicationName = 'eraviewer'
+}
+
 // build extra start script for EraNetworkConfig
 task buildEraNetworkConfigScript(type: CreateStartScripts) {
     description "Creates EraNetWorkConfig script"
@@ -34,6 +43,21 @@ distZip {
     baseName = archivesBaseName
     //include our extra start scripts
     into("${baseName}/bin") {
+        from buildEraViewerScript
+        fileMode = 0755
+        from buildEraNetworkConfigScript
+        fileMode = 0755
+        from buildEraDeployScript
+        fileMode = 0755
+    }
+}
+
+distTar {
+    baseName = archivesBaseName
+    //include our extra start scripts
+    into("${baseName}/bin") {
+        from buildEraViewerScript
+        fileMode = 0755
         from buildEraNetworkConfigScript
         fileMode = 0755
         from buildEraDeployScript
