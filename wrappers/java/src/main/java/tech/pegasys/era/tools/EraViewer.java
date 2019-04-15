@@ -94,7 +94,7 @@ public class EraViewer {
         System.err.println("ERA Viewer started with parameters:");
 
         if (args.length != 3) {
-            System.err.println("Usage: eraviewer tokenFileName domain");
+            System.err.println("Usage: eraviewer tokenFileName ERAaddressFilename domain");
             return;
         }
         System.err.println(" Infura ProjectID / token file name: " + args[0]);
