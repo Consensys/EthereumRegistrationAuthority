@@ -7,21 +7,44 @@ This project provides java interface for interacting with ERA contracts.
 
 ### Instruction for using EraNetworkConfig:
 
-When using this program with tag --deploy-config,
-make sure to put a config file with name 'configuration' under the launching directory
-The correct format for './configuration' is as follows
+* Usage for deploying network
 
-web3j=${web3j http address to connect to}
-key=${private key of the account that is going to do the deployment}
-root=${The contract address of the root era, start with 0x}
-finder=${The contract address of the finder, start with 0x}
-domain1 key:value key:value ....
-domain2 key:value key:value ....
-....
-(A list of domains with its key-value pair separated by space. For example a.pegasys.com.au ip=1.1.1.1 port=1111)
+```
+EraNetworkConfig --deploy-config
+```
+The tool expects a configuration file under the launching directory.
+```
+'./configuration'
+```
+The correct format for `./configuration` is as follows
+```
+web3j=${web3j-http-address-to-connect-to}
+key=${private-key}
+root=${contract-address-of-root-era}
+finder=${contract-address-of-finder}
+${domain-name-1} ${key}=${value} ${key}=${value} ...
+${domain-name-2} ${key}=${value} ${key}=${value} ...
+...
+```
+Line 1 is the web3j http address that this tool is used to interact with ethereum. For example, if a infura rinkeby test node is used, the field should be `web3j=https://rinkeby.infura.io/v3/$token`.
+Line 2 is the priavte key of the ethereum account that is used to interact with account and it does **not** start with `0x`.
+LIne 3 is the contract address of the root era and it starts with `0x`.
+LIne 4 is the contract address of the finder and it starts with `0x`.
+Line 5 and above are a list of domains with its key-value pair separated by space. For example `a.pegasys.com.au ip=1.1.1.1 port=1111`.
 
-If there isn't any era or finder available, configuration file can have only the first 2 lines (web3j and key).
-Then, by using this tool with tag --create-era to create a new era or --create-finder to create a new finder.
+* Usage for creating finder and root era
+
+To create a new root era.
+```
+EraNetworkConfig --create-era
+```
+
+To create a new finder.
+```
+EraNetworkCOnfig -create-finder
+```
+The first two lines of the configuration file in this case is compulsory. The rest lines won't be read.
+Upon completion, the contract address will be printed to the console.
 
 
 ## Development
