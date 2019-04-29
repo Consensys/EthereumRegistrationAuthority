@@ -27,9 +27,9 @@ ${domain-name-2} ${key}=${value} ${key}=${value} ...
 ...
 ```
 Line 1 is the web3j http address that this tool is used to interact with ethereum. For example, if a infura rinkeby test node is used, the field should be `web3j=https://rinkeby.infura.io/v3/$token`.
-Line 2 is the priavte key of the ethereum account that is used to interact with account and it does **not** start with `0x`.
-LIne 3 is the contract address of the root era and it starts with `0x`.
-LIne 4 is the contract address of the finder and it starts with `0x`.
+Line 2 is the private key of the ethereum account that is used to interact with account and it does **not** start with `0x`.
+Line 3 is the contract address of the root era and it starts with `0x`.
+Line 4 is the contract address of the finder and it starts with `0x`.
 Line 5 and above are a list of domains with its key-value pair separated by space. For example `a.pegasys.com.au ip=1.1.1.1 port=1111`.
 
 * Usage for creating finder and root era
@@ -43,7 +43,7 @@ To create a new finder.
 ```
 EraNetworkCOnfig -create-finder
 ```
-The first two lines of the configuration file in this case is compulsory. The rest lines won't be read.
+The first two lines of the configuration file in this case are compulsory. Remaining lines won't be read.
 Upon completion, the contract address will be printed to the console.
 
 
