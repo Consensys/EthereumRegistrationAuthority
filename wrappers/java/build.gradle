@@ -27,15 +27,6 @@ task buildEraNetworkConfigScript(type: CreateStartScripts) {
     applicationName = 'eranetworkconfig'
 }
 
-// build extra start script for EraDeploy
-task buildEraDeployScript(type: CreateStartScripts) {
-    description "Creates EraDeploy script"
-    classpath = startScripts.classpath
-    outputDir = startScripts.outputDir
-    mainClassName = 'tech.pegasys.era.tools.EraDeploy'
-    applicationName = 'eradeploy'
-}
-
 // build start scripts
 // Note: This causes double overwrite during unzip of poc.zip and -o option is
 //       therefore required. This approach is temporary and good enough for now.
@@ -47,8 +38,6 @@ distZip {
         fileMode = 0755
         from buildEraNetworkConfigScript
         fileMode = 0755
-        from buildEraDeployScript
-        fileMode = 0755
     }
 }
 
@@ -59,8 +48,6 @@ distTar {
         from buildEraViewerScript
         fileMode = 0755
         from buildEraNetworkConfigScript
-        fileMode = 0755
-        from buildEraDeployScript
         fileMode = 0755
     }
 }
