@@ -1,10 +1,56 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
+
+mainClassName = 'tech.pegasys.era.tools.EraViewer'
+
+// build extra start script for EraViewer
+task buildEraViewerScript(type: CreateStartScripts) {
+    description "Creates EraViewer script"
+    classpath = startScripts.classpath
+    outputDir = startScripts.outputDir
+    mainClassName = 'tech.pegasys.era.tools.EraViewer'
+    applicationName = 'eraviewer'
+}
+
+// build extra start script for EraNetworkConfig
+task buildEraNetworkConfigScript(type: CreateStartScripts) {
+    description "Creates EraNetWorkConfig script"
+    classpath = startScripts.classpath
+    outputDir = startScripts.outputDir
+    mainClassName = 'tech.pegasys.era.tools.EraNetworkConfig'
+    applicationName = 'eranetworkconfig'
+}
+
+// build start scripts
+// Note: This causes double overwrite during unzip of poc.zip and -o option is
+//       therefore required. This approach is temporary and good enough for now.
+distZip {
+    baseName = archivesBaseName
+    //include our extra start scripts
+    into("${baseName}/bin") {
+        from buildEraViewerScript
+        fileMode = 0755
+        from buildEraNetworkConfigScript
+        fileMode = 0755
+    }
+}
+
+distTar {
+    baseName = archivesBaseName
+    //include our extra start scripts
+    into("${baseName}/bin") {
+        from buildEraViewerScript
+        fileMode = 0755
+        from buildEraNetworkConfigScript
+        fileMode = 0755
+    }
+}
 
 repositories {
     mavenCentral()
